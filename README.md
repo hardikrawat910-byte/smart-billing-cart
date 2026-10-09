@@ -75,6 +75,12 @@ The Pi never accepts incoming connections. It only calls out to the server over 
 | Load cell + HX711 amplifier | Weighs each item as it goes into the cart |
 | Green LED, red LED (220 Ω each), buzzer | OK / problem signals |
 
+<p align="center">
+  <img src="docs/hardware/raspberry-pi-gpio-wiring.jpg" width="300" alt="Raspberry Pi 4 with jumper wires on the GPIO header">
+  <img src="docs/hardware/hx711-load-cell-amplifier.jpg" width="300" alt="HX711 load-cell amplifier board with the load cell's four wires">
+</p>
+<p align="center"><sub>Left: the Raspberry Pi 4 GPIO wiring. Right: the HX711 amplifier and the load cell's wires.</sub></p>
+
 **Wiring** (physical pin numbers on the Pi header):
 
 | Wire | Pi pin |
