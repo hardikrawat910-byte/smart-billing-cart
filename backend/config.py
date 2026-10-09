@@ -1,4 +1,5 @@
 import os
+import secrets
 from datetime import timedelta
 from urllib.parse import quote_plus
 
@@ -11,6 +12,33 @@ load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 def _env(name, default=""):
     return (os.getenv(name) or default).strip()
+
+
+# Values that were ever shipped as examples. They are public, so they never count as a secret.
+_PLACEHOLDERS = {"change-me", "change-me-to-a-long-random-string", "dev-only-change-me-dev-only-change-me",
+                 "esp32-shared-secret"}
+
+
+def _secret(name, filename, nbytes):
+    """A secret from the environment (.env or the host's settings). Without one, a random value is
+    made once and kept in backend/<filename> (ignored by git), so it is never in the public code."""
+    value = _env(name)
+    if value and value not in _PLACEHOLDERS:
+        return value
+    path = os.path.join(BASE_DIR, filename)
+    if os.path.exists(path):
+        with open(path, encoding="utf-8") as fh:
+            value = fh.read().strip()
+        if value:
+            return value
+    value = secrets.token_hex(nbytes)
+    with open(path, "w", encoding="utf-8") as fh:
+        fh.write(value)
+    try:
+        os.chmod(path, 0o600)
+    except OSError:
+        pass
+    return value
 
 
 DB_USER = _env("DB_USER", "root")
@@ -51,14 +79,14 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = _engine_options()
 
-    JWT_SECRET_KEY = _env("JWT_SECRET", "dev-only-change-me-dev-only-change-me")
+    JWT_SECRET_KEY = _secret("JWT_SECRET", ".jwt_secret", 32)
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=7)
 
     MAX_CONTENT_LENGTH = 5 * 1024 * 1024          # max upload (camera JPEGs)
     UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
     FRONTEND_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "frontend-html"))
 
-    DEVICE_KEY = _env("DEVICE_KEY", "esp32-shared-secret")
+    DEVICE_KEY = _secret("DEVICE_KEY", ".device_key", 8)   # if made up: see backend/.device_key
     HARDWARE_MODE = _env("HARDWARE_MODE", "off").lower()     # off | weight | full
     WEIGHT_TOLERANCE_PCT = float(_env("WEIGHT_TOLERANCE_PCT", "5"))
     MIN_ITEM_WEIGHT_G = float(_env("MIN_ITEM_WEIGHT_G", "2"))

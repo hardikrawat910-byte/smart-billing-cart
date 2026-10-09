@@ -276,12 +276,17 @@ def main():
         upgrade_schema(db)
 
         email = (os.getenv("ADMIN_EMAIL") or "admin@smartcart.local").strip().lower()
-        password = os.getenv("ADMIN_PASSWORD") or "Admin@12345"
+        password = (os.getenv("ADMIN_PASSWORD") or "").strip()
+        made_up = not password or password == "choose-a-strong-password"
+        if made_up:
+            import secrets
+            password = secrets.token_urlsafe(9)
         admin = User.query.filter_by(email=email).first()
         if admin is None:
             db.session.add(User(full_name="SmartCart Admin", email=email, role="admin",
                                 password_hash=generate_password_hash(password)))
-            shown = password if password == "Admin@12345" else "(the ADMIN_PASSWORD you set)"
+            shown = f"{password}   <- made up now, write it down (or set ADMIN_PASSWORD)" if made_up \
+                else "(the ADMIN_PASSWORD you set)"
             print(f"Created admin account: {email} / {shown}")
         elif admin.role != "admin":
             admin.role = "admin"

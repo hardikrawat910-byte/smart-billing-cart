@@ -104,7 +104,7 @@ Quick start on a PC with Python 3.10+ and MySQL 8:
 
 ```
 cd smart-billing-cart/backend
-copy .env.example .env        (Mac/Linux: cp .env.example .env), then set DB_PASSWORD and ADMIN_PASSWORD
+copy .env.example .env        (Mac/Linux: cp .env.example .env), then set DB_PASSWORD (and ADMIN_PASSWORD)
 python -m venv venv
 venv\Scripts\activate         (Mac/Linux: source venv/bin/activate)
 pip install -r requirements.txt
@@ -112,7 +112,7 @@ python seed.py
 python app.py
 ```
 
-Open http://localhost:5000. The full guide covers every setting, the Raspberry Pi setup, free 24/7 hosting, Google sign-in and every API route: **[SETUP.md](SETUP.md)**. The Pi program has its own guide in [pi/README.md](pi/README.md).
+Open http://localhost:5000 and log in as `admin@smartcart.local` with your `ADMIN_PASSWORD` (left blank, `seed.py` makes one up and prints it once). The full guide covers every setting, the Raspberry Pi setup, free 24/7 hosting, Google sign-in and every API route: **[SETUP.md](SETUP.md)**. The Pi program has its own guide in [pi/README.md](pi/README.md).
 
 ## Project layout
 
@@ -123,6 +123,12 @@ pi/              Raspberry Pi cart program, installer, autostart service
 render.yaml      One-click hosting on Render
 SETUP.md         Full setup and technical guide
 ```
+
+## Team
+
+- Shivraj Morde
+- Hardik Rawat
+- Ismail Mohammed
 
 ## Licence
 

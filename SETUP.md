@@ -29,8 +29,8 @@ The Pi never accepts incoming connections: it only calls out to the website with
    python app.py
    ```
 4. Open **http://localhost:5000**. Flask serves the website too, so there is no CORS setup.
-5. Log in as admin: `admin@smartcart.local` with the `ADMIN_PASSWORD` you set (without one, the
-   seed uses the demo password printed by `python seed.py` - change it before going online).
+5. Log in as admin: `admin@smartcart.local` with the `ADMIN_PASSWORD` from `.env`. If it is blank,
+   `python seed.py` makes up a password and prints it once - write it down.
 
 **Updating from an older version:** run `python seed.py` once - it adds the new columns/tables
 (nothing is deleted). Online (Render) this happens automatically on every start.
@@ -151,7 +151,8 @@ Pi 4 + Pi Camera v2 + HX711 with a load cell + green LED + red LED + buzzer. Pro
 (full guide in `pi/README.md`).
 1. Copy the folder to the Pi. From Windows: `scp -r pi <user>@smartcart.local:~/`
 2. On the Pi: `cd ~/pi && bash install.sh`, then `python3 cart_agent.py test-camera` (creates
-   `cart_agent.ini`). Put **DEVICE_KEY** (Render > Environment, or `backend/.env`) into it.
+   `cart_agent.ini`). Put **DEVICE_KEY** (Render > Environment, or `backend/.env`; if
+   that is blank, the server made one up in `backend/.device_key`) into it.
 3. `python3 cart_agent.py test-lights`, `calibrate`, `test-scale`, then `run`.
 4. `bash install.sh autostart` - from now on it starts by itself when the Pi is powered on
    (green x3 + beep = connected). `bash install.sh firewall` blocks all incoming connections.
@@ -232,6 +233,9 @@ The Wallet counter shows a "Pi camera" line: online and passing tokens, not runn
 off, or "old Pi program" (a cart_agent.py from before v2.8.4 - copy the new one to the Pi).
 
 ## Speed and security
+- **No secrets in the code:** `JWT_SECRET`, `DEVICE_KEY` and `ADMIN_PASSWORD` come from `.env` or the
+  host's settings. If one is missing, the server makes up a random value and keeps it in
+  `backend/.jwt_secret` / `backend/.device_key` (ignored by git) - never a value printed in the code.
 - **Memory cache:** the catalogue is kept in the server's RAM; the shop, product pages and every scan
   are answered without asking MySQL. Admin edits and checkouts clear it at once, and it refreshes
   itself every 5 minutes. Hit rate is shown under Admin > Hardware.
@@ -345,3 +349,6 @@ With `python app.py` running: `cloudflared tunnel --url http://localhost:5000` a
 - Prices are single INR prices.
 - Unknown pages show a friendly 404 page; slow first loads show a "waking up" bar and grey skeletons.
 - `privacy.html` and `terms.html` explain what is stored and how the wallet works (linked from login and profile).
+
+## Team
+Shivraj Morde, Hardik Rawat and Ismail Mohammed.
