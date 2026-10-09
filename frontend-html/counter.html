@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Wallet counter - SmartCart</title>
+  <meta name="description" content="SmartCart staff counter: confirm wallet top-ups paid by cash or UPI.">
+  <meta name="theme-color" content="#efdc86">
+  <link rel="icon" href="favicon.svg?v=2.8.4" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="SmartCart">
+  <link rel="stylesheet" href="css/style.css?v=2.8.4">
+</head>
+<body>
+  <div class="app">
+    <header class="page-head">
+      <div>
+        <h1 id="title">Wallet counter</h1>
+        <p class="subtitle" id="subtitle">Scan the customer's top-up token, take the money, confirm.</p>
+      </div>
+      <div id="head-action"><a class="btn btn-outline btn-sm" href="admin.html">Admin</a></div>
+    </header>
+    <main id="main">
+      <div class="row" style="gap:8px">
+        <div class="stat"><p class="xs muted">Cash today</p><p class="stat-value tabular" id="t-cash">-</p></div>
+        <div class="stat"><p class="xs muted">UPI today</p><p class="stat-value tabular" id="t-upi">-</p></div>
+      </div>
+      <div class="card gate-live" id="pi-live" style="margin-top:16px">
+        <span class="dot" id="pi-dot"></span>
+        <div class="grow"><p class="small" style="font-weight:600">Pi camera</p><p class="xs muted" id="pi-text">Checking the Raspberry Pi&hellip;</p></div>
+        <span style="color:var(--primary)" id="pi-icon"></span>
+      </div>
+      <div class="scanner" id="scanner-box" style="height:260px">
+        <div id="reader"></div>
+        <div class="scan-frame"><div class="box" style="width:180px;height:180px">
+          <span class="corner c-tl"></span><span class="corner c-tr"></span>
+          <span class="corner c-bl"></span><span class="corner c-br"></span>
+        </div></div>
+        <div class="scanner-status" id="working"><span class="spinner"></span> Checking token...</div>
+      </div>
+      <p class="small muted center" id="cam-status" style="margin-top:10px">Starting camera...</p>
+      <form id="manual-form" class="row" style="margin-top:8px">
+        <input class="input" id="manual-code" placeholder="Token number, e.g. T-000042" aria-label="Token number" autocomplete="off">
+        <button class="btn" type="submit">Check</button>
+      </form>
+      <section id="result" style="margin-top:16px" aria-live="polite"></section>
+
+      <h2 class="section-title">Waiting to pay</h2>
+      <div id="pending"></div>
+
+      <h2 class="section-title">Add money directly</h2>
+      <form id="credit-form" class="card" novalidate>
+        <p class="xs muted" style="margin-bottom:10px">For refunds or demo money: no token needed.</p>
+        <div class="field"><label class="label" for="c-email">Customer email</label>
+          <input class="input" id="c-email" type="email" list="c-list" autocomplete="off" placeholder="name@example.com"><datalist id="c-list"></datalist>
+          <p class="field-error" data-for="email"></p></div>
+        <div class="form-grid">
+          <div class="field"><label class="label" for="c-amount">Amount (₹)</label><input class="input" id="c-amount" type="number" min="1" step="1"><p class="field-error" data-for="amount"></p></div>
+          <div class="field"><label class="label" for="c-note">Reason</label><input class="input" id="c-note" maxlength="160" placeholder="Refund SC-000012"></div>
+        </div>
+        <button class="btn btn-block" type="submit" id="c-submit">Add to wallet</button>
+      </form>
+
+      <h2 class="section-title">Recent wallet activity</h2>
+      <div class="card" style="padding:4px 16px" id="recent"></div>
+    </main>
+  </div>
+  <script src="js/api.js?v=2.8.4"></script>
+  <script src="js/ui.js?v=2.8.4"></script>
+  <script src="js/counter.js?v=2.8.4"></script>
+</body>
+</html>

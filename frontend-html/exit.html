@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Exit gate - SmartCart</title>
+  <meta name="description" content="SmartCart - scan items, verify them by weight and camera, pay from your wallet and skip the billing queue.">
+  <meta name="theme-color" content="#efdc86">
+  <link rel="icon" href="favicon.svg?v=2.8.4" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="SmartCart">
+  <link rel="stylesheet" href="css/style.css?v=2.8.4">
+</head>
+<body>
+  <div class="app">
+    <header class="page-head">
+      <div>
+        <h1 id="title">Exit gate</h1>
+        <p class="subtitle" id="subtitle">The Pi camera checks bills by itself. This phone can scan too.</p>
+      </div>
+      <div id="head-action"><a class="btn btn-outline btn-sm" href="admin.html">Admin</a></div>
+    </header>
+    <main id="main">
+      <div class="card gate-live" id="gate-live">
+        <span class="dot" id="gate-dot"></span>
+        <div class="grow"><p class="small" style="font-weight:600">Pi camera gate</p><p class="xs muted" id="gate-text">Checking the Raspberry Pi&hellip;</p></div>
+        <span style="color:var(--primary)" id="gate-icon"></span>
+      </div>
+      <section id="result" style="margin-bottom:16px" aria-live="polite"></section>
+      <p class="small" id="scan-label" style="font-weight:600;margin-bottom:8px">Scan with this phone</p>
+      <div class="scanner" id="scanner-box">
+        <div id="reader"></div>
+        <div class="scan-frame"><div class="box">
+          <span class="corner c-tl"></span><span class="corner c-tr"></span>
+          <span class="corner c-bl"></span><span class="corner c-br"></span>
+          <span class="scanline"></span>
+        </div></div>
+        <div class="scanner-status" id="working"><span class="spinner"></span> Checking bill...</div>
+      </div>
+      <p class="small muted center" id="cam-status" style="margin-top:12px">Starting camera...</p>
+      <form id="manual-form" class="row" style="margin-top:8px">
+        <input class="input" id="manual-code" placeholder="SCBILL-12-3fa9c01b77d2e845" aria-label="Bill code" autocomplete="off">
+        <button class="btn" type="submit">Check</button>
+      </form>
+      <h2 class="section-title">Recent exits</h2>
+      <ul id="recent" class="list"></ul>
+    </main>
+  </div>
+  <script src="js/api.js?v=2.8.4"></script>
+  <script src="js/ui.js?v=2.8.4"></script>
+  <script src="js/exit.js?v=2.8.4"></script>
+</body>
+</html>

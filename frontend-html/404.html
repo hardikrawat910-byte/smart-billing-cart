@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Page not found - SmartCart</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#efdc86">
+  <link rel="icon" href="/favicon.svg?v=2.8.4" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="SmartCart">
+  <link rel="stylesheet" href="/css/style.css?v=2.8.4">
+</head>
+<body>
+  <main class="notfound">
+    <svg viewBox="0 0 160 120" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M8 18h18l14 62h82l14-46H34" />
+      <circle cx="52" cy="100" r="9" />
+      <circle cx="112" cy="100" r="9" />
+      <path d="M72 46c0-8 6-13 13-13s13 5 13 12c0 9-11 10-11 18" />
+      <path d="M87 72h.01" stroke-width="7" />
+    </svg>
+    <p class="code">404</p>
+    <h1 style="font-size:1.25rem;font-weight:700">This aisle is empty</h1>
+    <p class="small muted" style="max-width:300px">The page you opened doesn't exist. Maybe the link was mistyped, or the item moved shelves.</p>
+    <div class="row" style="margin-top:10px;flex-wrap:wrap;justify-content:center">
+      <a class="btn" href="/index.html">Back to the shop</a>
+      <a class="btn btn-secondary" href="/scan.html">Scan an item</a>
+    </div>
+    <p class="xs muted" style="margin-top:14px" id="path"></p>
+  </main>
+  <script>
+    document.getElementById('path').textContent = location.pathname;
+  </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+flask>=3.0
+flask-cors>=4.0
+flask-sqlalchemy>=3.1
+flask-jwt-extended>=4.6
+pymysql>=1.1
+cryptography>=42.0
+python-dotenv>=1.0
+pillow>=10.4
+# Google sign-in: checks Google's token signature
+google-auth>=2.30
+requests>=2.31
+# production web server for online hosting (Render). Not needed on Windows.
+gunicorn>=22.0; sys_platform != "win32"

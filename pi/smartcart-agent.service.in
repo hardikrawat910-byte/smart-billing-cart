@@ -1,0 +1,16 @@
+[Unit]
+Description=SmartCart Raspberry Pi program (load cell + camera + exit gate)
+After=network-online.target time-sync.target
+Wants=network-online.target
+
+[Service]
+User=__USER__
+WorkingDirectory=__DIR__
+ExecStart=/usr/bin/python3 __DIR__/cart_agent.py run
+# The program waits for WiFi/the website by itself; this only covers crashes.
+Restart=on-failure
+RestartSec=10
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

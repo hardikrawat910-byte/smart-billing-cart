@@ -1,1 +1,129 @@
-# smart-billing-cart
+# SmartCart: Smart Billing Cart
+
+**Scan as you shop, pay from your phone, walk out. No billing queue.**
+
+SmartCart is a self-checkout cart for a neighbourhood general store. Shoppers scan items with their phone. A Raspberry Pi on the cart weighs and photographs each item to check it matches the scan. The shopper pays from a SmartCart Wallet, and the Pi camera checks the bill QR at the exit.
+
+**Live demo:** https://smartcart-gkrx.onrender.com
+(free hosting: the first visit after a quiet spell can take about 30 seconds to wake up)
+
+Built as a side project.
+
+<p align="center">
+  <img src="docs/screenshots/01_home.png" width="200" alt="Home page with today's deals and shop shelves">
+  <img src="docs/screenshots/02_scan_added.png" width="200" alt="Scanning a QR label adds the item">
+  <img src="docs/screenshots/03_cart.png" width="200" alt="Cart with running total and offer savings">
+  <img src="docs/screenshots/04_bill.png" width="200" alt="Paid bill with exit pass QR">
+</p>
+
+## How it works
+
+```mermaid
+flowchart LR
+    P["Shopper's phone<br/>(website / installable app)"] -- "scan, cart, pay" --> S["SmartCart server<br/>Flask + MySQL"]
+    S -- "cart, bill, exit pass QR" --> P
+    Pi["Raspberry Pi 4 on the cart<br/>load cell + HX711, Pi camera,<br/>LEDs, buzzer"] -- "weight, photo, exit scans<br/>(HTTPS, device key)" --> S
+    St["Staff phone or laptop<br/>wallet counter, exit gate, admin"] --> S
+```
+
+1. **Scan.** The shopper scans the barcode on a pack, or the SmartCart QR label, with their phone.
+2. **Verify.** The Pi sends the weight of what was just placed in the cart and a photo of it. An item enters the cart only if the **barcode, the weight and the camera colour** all agree. A mismatch, such as scanning an expensive item but putting in a cheap one, is flagged for staff.
+3. **Pay.** The bill is paid from the shopper's **SmartCart Wallet**. They top it up at the counter by cash or UPI using a one-time payment token.
+4. **Exit.** The paid bill carries a signed, one-time **exit pass** QR. The shopper holds it under the Pi camera: green light and one beep means OK, red light and beeps means stop.
+
+The Pi never accepts incoming connections. It only calls out to the server over HTTPS with its device key.
+
+## Features
+
+**For shoppers**
+- One scanner for printed barcodes (EAN-13/8, UPC-A/E, Code 128/39) and SmartCart QR labels
+- Running total, offers with MRP and "You saved", and a spending budget with warnings
+- Shopping list with a store map that lights up the aisles still to visit; items tick off as they are scanned
+- Wallet top-up tokens with a "Pay with a UPI app" button (amount filled in)
+- Undo a wrong scan, "Call staff" button, voice search, larger-text option
+- Share or print the bill as a PDF; installs as an app on Android and iPhone
+
+**Against theft and mistakes**
+- Verification modes: barcode only, barcode + weight, or barcode + weight + camera colour
+- Each weight reading can verify only one scan, so one weighing can't cover two items
+- An item put in the cart **without scanning** triggers a red banner on the phone and a blink and beep on the cart
+- Exit passes are HMAC-signed and work once: screenshots, edited QR codes and reused bills are refused
+
+**For staff**
+- **Wallet counter:** scan a token, take cash or UPI, confirm. A token held under the Pi camera opens there by itself
+- **Exit gate:** live results from the Pi camera, plus phone scanning as a backup
+- **Admin dashboard:** today's sales, 7-day chart, best sellers, low stock with one-tap restock, flagged scans, Sales CSV
+- Help calls from shoppers appear with a beep; staff press "On my way"
+
+<p align="center">
+  <img src="docs/screenshots/02b_list.png" width="200" alt="Shopping list with store map">
+  <img src="docs/screenshots/05_wallet_token_upi.png" width="200" alt="Wallet top-up token with UPI button">
+  <img src="docs/screenshots/06_counter_upi.png" width="200" alt="Staff wallet counter confirming a payment">
+  <img src="docs/screenshots/10_unscanned_alert.png" width="200" alt="Alert for an item put in without scanning">
+</p>
+<p align="center">
+  <img src="docs/screenshots/07_exit_ok.png" width="200" alt="Exit gate: bill verified">
+  <img src="docs/screenshots/08_dashboard.png" width="200" alt="Admin dashboard">
+</p>
+
+## Hardware
+
+| Part | Job |
+|---|---|
+| Raspberry Pi 4 | Runs the cart program `pi/cart_agent.py` |
+| Pi Camera v2 | Colour check of each item, reads exit passes and wallet tokens |
+| Load cell + HX711 amplifier | Weighs each item as it goes into the cart |
+| Green LED, red LED (220 Ω each), buzzer | OK / problem signals |
+
+**Wiring** (physical pin numbers on the Pi header):
+
+| Wire | Pi pin |
+|---|---|
+| HX711 VCC | 1 (3.3 V) |
+| HX711 GND | 9 |
+| HX711 DT | 29 (GPIO 5) |
+| HX711 SCK | 31 (GPIO 6) |
+| Green LED + | 11 (GPIO 17) |
+| Red LED + | 13 (GPIO 27) |
+| Buzzer + | 15 (GPIO 22) |
+| LEDs and buzzer − | 14 (GND) |
+
+Without the hardware, the website still runs: an admin-only simulator sends weights and colours, so the whole flow can be demonstrated on a laptop.
+
+## Tech stack
+
+- **Server:** Python, Flask, SQLAlchemy, MySQL 8, JWT login, optional Google sign-in
+- **Website:** plain HTML, CSS and JavaScript (no framework), installable as an app with an offline page
+- **Raspberry Pi:** Python with lgpio / RPi.GPIO, an HX711 driver, Picamera2, pyzbar for QR codes
+- **Hosting:** Render (web) and Aiven (MySQL), both on free plans
+- **Bundled libraries:** html5-qrcode, qrcodejs and the Plus Jakarta Sans font, served from the site itself so it works on networks that block CDNs (licences in `frontend-html/vendor/`)
+
+## Run it yourself
+
+Quick start on a PC with Python 3.10+ and MySQL 8:
+
+```
+cd smart-billing-cart/backend
+copy .env.example .env        (Mac/Linux: cp .env.example .env), then set DB_PASSWORD and ADMIN_PASSWORD
+python -m venv venv
+venv\Scripts\activate         (Mac/Linux: source venv/bin/activate)
+pip install -r requirements.txt
+python seed.py
+python app.py
+```
+
+Open http://localhost:5000. The full guide covers every setting, the Raspberry Pi setup, free 24/7 hosting, Google sign-in and every API route: **[SETUP.md](SETUP.md)**. The Pi program has its own guide in [pi/README.md](pi/README.md).
+
+## Project layout
+
+```
+backend/         Flask server: routes, models, wallet, verification, seed data
+frontend-html/   Website pages, scripts, styles, icons, bundled libraries
+pi/              Raspberry Pi cart program, installer, autostart service
+render.yaml      One-click hosting on Render
+SETUP.md         Full setup and technical guide
+```
+
+## Licence
+
+MIT. See [LICENSE](LICENSE). Bundled third-party libraries keep their own licences (in `frontend-html/vendor/`).

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>SmartCart - Scan, Pay and Walk Out</title>
+  <meta name="description" content="SmartCart - scan items, verify them by weight and camera, pay from your wallet and skip the billing queue.">
+  <meta name="theme-color" content="#efdc86">
+  <link rel="icon" href="favicon.svg?v=2.8.4" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="SmartCart">
+  <link rel="stylesheet" href="css/style.css?v=2.8.4">
+</head>
+<body>
+  <div class="app">
+    <header class="page-head">
+      <div>
+        <h1 id="title">SmartCart</h1>
+        <p class="subtitle" id="subtitle">Your neighbourhood store, without the billing queue.</p>
+      </div>
+      <div id="head-action"></div>
+    </header>
+    <main id="main">
+      <div class="search">
+        <span id="search-icon"></span>
+        <input id="search" class="input" type="search" placeholder="Search notebooks, snacks, soap..." aria-label="Search products">
+        <button type="button" class="mic" id="mic" hidden aria-label="Search by voice"></button>
+      </div>
+      <a id="list-banner" class="card list-banner" href="list.html" hidden></a>
+      <div id="featured-head" class="row between" style="margin-bottom:10px" hidden>
+        <h2 style="font-size:1rem;font-weight:700">Today's deals</h2>
+        <button type="button" class="btn-link small" data-see="Deals">See all</button>
+      </div>
+      <div id="featured" class="featured"></div>
+      <div id="chips" class="chips" role="group" aria-label="Filter by section"></div>
+      <div id="sections"></div>
+      <div id="grid-head" class="row between" style="margin-bottom:12px" hidden>
+        <h2 style="font-size:1rem;font-weight:600" id="grid-title">Products</h2>
+        <a class="btn btn-ghost btn-sm" href="scan.html" id="scan-link" style="color:var(--primary)">Scan</a>
+      </div>
+      <ul id="grid" class="grid-2"></ul>
+    </main>
+  </div>
+  <script src="js/api.js?v=2.8.4"></script>
+  <script src="js/ui.js?v=2.8.4"></script>
+  <script src="js/home.js?v=2.8.4"></script>
+</body>
+</html>

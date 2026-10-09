@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Sign in - SmartCart</title>
+  <meta name="theme-color" content="#efdc86">
+  <link rel="icon" href="favicon.svg?v=2.8.4" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="SmartCart">
+  <link rel="stylesheet" href="css/style.css?v=2.8.4">
+</head>
+<body>
+  <div class="app" style="display:flex;flex-direction:column;justify-content:center;padding-bottom:40px">
+    <div class="center" style="margin-bottom:24px">
+      <span class="pill">Scan. Add. Checkout.</span>
+      <h1 style="font-size:1.9rem;font-weight:800;margin-top:12px;letter-spacing:-.02em">SmartCart</h1>
+      <p class="subtitle">Scan as you shop, pay from your wallet, walk out. No billing queue.</p>
+    </div>
+    <div class="card" style="padding:20px">
+      <div class="tabs" role="tablist">
+        <button type="button" class="tab active" data-mode="login">Login</button>
+        <button type="button" class="tab" data-mode="signup">Create account</button>
+      </div>
+      <form id="auth-form" novalidate>
+        <div class="field" id="name-field" hidden>
+          <label class="label" for="full_name">Full name</label>
+          <input class="input" id="full_name" autocomplete="name" placeholder="Alex Kumar">
+          <p class="field-error" data-for="full_name"></p>
+        </div>
+        <div class="field">
+          <label class="label" for="email">Email</label>
+          <input class="input" id="email" type="email" autocomplete="email" placeholder="you@example.com">
+          <p class="field-error" data-for="email"></p>
+        </div>
+        <div class="field">
+          <label class="label" for="password">Password</label>
+          <input class="input" id="password" type="password" autocomplete="current-password" placeholder="At least 8 characters">
+          <p class="field-error" data-for="password"></p>
+        </div>
+        <button class="btn btn-block" type="submit" id="submit">Login</button>
+      </form>
+      <div id="google-area" hidden>
+        <div class="or-divider">or</div>
+        <div id="google-btn" class="google-btn"></div>
+        <p class="xs muted center" id="google-note" style="margin-top:8px" hidden></p>
+      </div>
+      <p class="small muted center" style="margin-top:20px">
+        <span id="switch-text">New to SmartCart?</span>
+        <button type="button" class="btn-link" id="switch">Create an account</button>
+      </p>
+    </div>
+    <p class="small center" style="margin-top:16px"><a href="index.html" class="muted">Browse the catalogue first</a></p>
+    <p class="legal-links">By continuing you agree to the <a href="terms.html">Terms of use</a> and <a href="privacy.html">Privacy policy</a>.</p>
+  </div>
+  <script src="js/api.js?v=2.8.4"></script>
+  <script src="js/ui.js?v=2.8.4"></script>
+  <script src="js/login.js?v=2.8.4"></script>
+</body>
+</html>

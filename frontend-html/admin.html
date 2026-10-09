@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Admin - SmartCart</title>
+  <meta name="description" content="SmartCart - scan items, verify them by weight and camera, pay from your wallet and skip the billing queue.">
+  <meta name="theme-color" content="#efdc86">
+  <link rel="icon" href="favicon.svg?v=2.8.4" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="SmartCart">
+  <link rel="stylesheet" href="css/style.css?v=2.8.4">
+</head>
+<body>
+  <div class="app">
+    <header class="page-head">
+      <div>
+        <h1 id="title">Admin</h1>
+        <p class="subtitle" id="subtitle">Sales, stock and the cart.</p>
+      </div>
+      <div id="head-action"><div class="row" style="gap:6px"><a class="btn btn-sm" href="counter.html">Counter</a><a class="btn btn-sm" href="exit.html">Exit gate</a><a class="btn btn-outline btn-sm" href="profile.html">Back</a></div></div>
+    </header>
+    <main id="main">
+      <div class="tabs five" role="tablist">
+        <button type="button" class="tab active" data-tab="dashboard">Today</button>
+        <button type="button" class="tab" data-tab="products">Products</button>
+        <button type="button" class="tab" data-tab="flags">Flags <span id="flag-count"></span></button>
+        <button type="button" class="tab" data-tab="orders">Orders</button>
+        <button type="button" class="tab" data-tab="hardware">Hardware</button>
+      </div>
+      <section id="tab-dashboard"></section>
+      <section id="tab-products" hidden></section>
+      <section id="tab-flags" hidden></section>
+      <section id="tab-orders" hidden></section>
+      <section id="tab-hardware" hidden></section>
+      <input type="file" id="quick-photo" accept="image/*" capture="environment" class="sr-only" tabindex="-1" aria-hidden="true">
+    </main>
+    <dialog class="modal" id="product-dialog"><div class="modal-body">
+      <form id="product-form" novalidate>
+        <h2 id="form-title" style="font-size:1.125rem;font-weight:700;margin-bottom:16px">New product</h2>
+        <div class="field"><label class="label" for="f-name">Name</label><input class="input" id="f-name" name="name" maxlength="120"><p class="field-error" data-for="name"></p></div>
+        <div class="form-grid">
+          <div class="field"><label class="label" for="f-category">Category</label><input class="input" id="f-category" name="category" list="category-list" maxlength="60"><datalist id="category-list"></datalist><p class="field-error" data-for="category"></p></div>
+          <div class="field"><label class="label" for="f-status">Status</label><select class="input" id="f-status" name="status"><option value="draft">Draft</option><option value="published">Published</option></select></div>
+          <div class="field"><label class="label" for="f-price">Selling price (INR)</label><input class="input" id="f-price" name="price" type="number" min="0" step="0.01"><p class="field-error" data-for="price"></p></div>
+          <div class="field"><label class="label" for="f-mrp">MRP on the pack</label><input class="input" id="f-mrp" name="mrp" type="number" min="0" step="0.01" placeholder="Optional"><p class="field-error" data-for="mrp"></p></div>
+          <div class="field"><label class="label" for="f-stock">Stock</label><input class="input" id="f-stock" name="stock" type="number" min="0" step="1"><p class="field-error" data-for="stock"></p></div>
+        </div>
+        <p class="xs muted" style="margin:-6px 0 12px">An MRP above the selling price puts the item in <b>Today's deals</b> with a "Save" tag. Leave it empty for no offer.</p>
+        <div class="field"><label class="label" for="f-qr">Product code</label>
+          <div class="row" style="gap:8px"><input class="input" id="f-qr" name="qr_code" maxlength="120" placeholder="Barcode number, or text for a QR label" autocomplete="off"><button type="button" class="btn btn-secondary" id="f-qr-scan" style="flex-shrink:0">Scan</button></div>
+          <div id="f-qr-box" class="mini-reader" hidden><div id="f-qr-reader"></div></div>
+          <p class="xs muted" style="margin-top:4px">Scan the barcode on the pack. No barcode? Type any text and print our QR label.</p>
+          <p class="field-error" data-for="qr_code"></p></div>
+        <div class="field"><span class="label">Photo</span>
+          <div class="row photo-row">
+            <div class="photo-preview" id="f-photo-preview"></div>
+            <div class="grow">
+              <label class="btn btn-secondary btn-sm" for="f-photo"><span id="f-photo-icon"></span> <span id="f-photo-label">Add photo</span></label>
+              <input type="file" id="f-photo" accept="image/*" class="sr-only">
+              <button type="button" class="btn btn-ghost btn-sm" id="f-photo-remove" hidden>Remove</button>
+              <p class="xs muted" style="margin-top:6px">Take a picture of the pack on a plain background, or pick one from the gallery. Saved when you press Save.</p>
+            </div>
+          </div>
+          <p class="field-error" data-for="photo"></p></div>
+        <details class="more-field"><summary class="xs muted">Use a web image link instead</summary>
+          <div class="field" style="margin-top:8px"><label class="label" for="f-image">Image URL</label><input class="input" id="f-image" name="image_url" maxlength="500" placeholder="https://..."><p class="field-error" data-for="image_url"></p></div></details>
+        <div class="field"><label class="label" for="f-desc">Description</label><textarea class="input" id="f-desc" name="description" maxlength="2000"></textarea></div>
+        <p class="small" style="font-weight:700;margin:4px 0 10px">Verification references</p>
+        <div class="form-grid">
+          <div class="field"><label class="label" for="f-wmin">Min weight (g)</label><input class="input" id="f-wmin" name="weight_min_g" type="number" min="0" step="0.1"><p class="field-error" data-for="weight_min_g"></p></div>
+          <div class="field"><label class="label" for="f-wmax">Max weight (g)</label><input class="input" id="f-wmax" name="weight_max_g" type="number" min="0" step="0.1"><p class="field-error" data-for="weight_max_g"></p></div>
+        </div>
+        <div class="field"><label class="label" for="f-color">Reference colour (camera)</label>
+          <div class="row"><input type="color" id="f-color-picker" value="#888888" style="width:44px;height:44px;border:none;background:none;padding:0"><input class="input" id="f-color" name="ref_color" placeholder="#a1b2c3 (blank if unknown)"></div>
+          <p class="field-error" data-for="ref_color"></p></div>
+        <p class="xs muted" style="margin-bottom:14px">Tip: save the product, place it alone on the scale and under the camera, then press <b>Calibrate</b> to fill these from real readings.</p>
+        <div class="row"><button type="button" class="btn btn-outline" id="form-cancel" style="flex:1">Cancel</button><button type="submit" class="btn" id="form-save" style="flex:1">Save</button></div>
+      </form>
+    </div></dialog>
+    <dialog class="modal" id="qr-dialog"><div class="modal-body center">
+      <h2 id="qr-title" style="font-size:1.05rem;font-weight:700;margin-bottom:12px"></h2>
+      <div class="qr-box" id="qr-target"></div>
+      <p class="mono muted" id="qr-code-text" style="margin:10px 0 16px"></p>
+      <div class="row"><button type="button" class="btn btn-outline" id="qr-close" style="flex:1">Close</button><button type="button" class="btn" id="qr-download" style="flex:1">Download PNG</button></div>
+    </div></dialog>
+  </div>
+  <script src="js/api.js?v=2.8.4"></script>
+  <script src="js/ui.js?v=2.8.4"></script>
+  <script src="js/admin.js?v=2.8.4"></script>
+</body>
+</html>

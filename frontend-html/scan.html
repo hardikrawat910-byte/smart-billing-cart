@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Scan - SmartCart</title>
+  <meta name="description" content="SmartCart - scan items, verify them by weight and camera, pay from your wallet and skip the billing queue.">
+  <meta name="theme-color" content="#efdc86">
+  <link rel="icon" href="favicon.svg?v=2.8.4" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="SmartCart">
+  <link rel="stylesheet" href="css/style.css?v=2.8.4">
+</head>
+<body>
+  <div class="app">
+    <header class="page-head">
+      <div>
+        <h1 id="title">Scan</h1>
+        <p class="subtitle" id="subtitle">Point the camera at the barcode on the pack or the SmartCart QR label.</p>
+      </div>
+      <div id="head-action"></div>
+    </header>
+    <main id="main">
+      <div class="card unscanned" id="unscanned" role="alert" hidden></div>
+      <div class="scanner">
+        <div id="reader"></div>
+        <div class="scan-frame"><div class="box">
+          <span class="corner c-tl"></span><span class="corner c-tr"></span>
+          <span class="corner c-bl"></span><span class="corner c-br"></span>
+          <span class="scanline"></span>
+        </div></div>
+        <div class="scanner-status" id="working"><span class="spinner"></span> Verifying item...</div>
+      </div>
+      <div id="denied" class="card" style="margin-top:16px;border-color:var(--destructive)" hidden>
+        <p style="font-weight:600">Camera unavailable</p>
+        <p class="small muted" id="denied-text" style="margin:6px 0 12px"></p>
+        <button class="btn btn-secondary btn-sm" type="button" onclick="location.reload()">Retry camera</button>
+      </div>
+      <p class="small muted center" id="cam-status" style="margin-top:16px">Starting camera...</p>
+      <div class="center" style="margin-top:8px"><button type="button" class="btn-link small" id="manual-toggle">Enter code manually</button></div>
+      <form id="manual-form" class="row" style="margin-top:8px" hidden>
+        <input class="input" id="manual-code" placeholder="Barcode number or code" aria-label="Product code" inputmode="text">
+        <button class="btn" type="submit">Add</button>
+      </form>
+      <section id="hw-panel" hidden>
+        <h2 class="section-title">Cart hardware</h2>
+        <div class="hw">
+          <div class="card"><p class="xs muted">Scale</p><p class="value tabular" id="hw-weight">-</p><p class="xs muted" id="hw-weight-age">Waiting for a reading...</p></div>
+          <div class="card" id="hw-cam-card"><p class="xs muted">Camera</p><img class="cam-thumb" id="hw-cam-img" alt="Latest camera capture" hidden><p class="xs muted" id="hw-cam-age">Waiting for a photo...</p></div>
+        </div>
+        <p class="xs muted" style="margin-top:8px" id="hw-mode"></p>
+        <p class="xs muted row" style="margin-top:4px;gap:6px" id="hw-devices"></p>
+        <div class="card" id="hw-sim" style="margin-top:12px" hidden>
+          <p class="small" style="font-weight:600">Demo simulator (admin only)</p>
+          <p class="xs muted" style="margin:4px 0 10px">Sends a fake scale + camera reading, like the Raspberry Pi. Scan within the time limit.</p>
+          <div class="row">
+            <input class="input" id="sim-weight" type="number" step="0.1" placeholder="Weight (g)" aria-label="Simulated weight in grams">
+            <input type="color" id="sim-color" value="#c8323c" aria-label="Simulated camera colour" style="width:44px;height:44px;border:none;background:none;padding:0;flex-shrink:0">
+            <button type="button" class="btn" id="sim-send">Send</button>
+          </div>
+        </div>
+      </section>
+    </main>
+    <div class="sheet-backdrop" id="sheet-backdrop"></div>
+    <div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
+    <main hidden>
+    </main>
+  </div>
+  <script src="js/api.js?v=2.8.4"></script>
+  <script src="js/ui.js?v=2.8.4"></script>
+  <script src="js/scan.js?v=2.8.4"></script>
+</body>
+</html>

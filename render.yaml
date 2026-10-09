@@ -1,0 +1,45 @@
+# Render Blueprint - free 24/7 hosting of the website + API.
+# Render: New > Blueprint > pick this GitHub repo. It asks for the values marked "sync: false".
+# The database is a free Aiven for MySQL service (Render has no MySQL of its own).
+services:
+  - type: web
+    name: smartcart
+    runtime: python
+    plan: free
+    buildCommand: pip install -r backend/requirements.txt
+    # seed.py is safe to run on every start: it only creates what is missing.
+    startCommand: cd backend && python seed.py && gunicorn app:app --workers 1 --threads 8 --timeout 60 --bind 0.0.0.0:$PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: DB_HOST            # Aiven > your MySQL service > Overview > Host
+        sync: false
+      - key: DB_PORT            # Aiven > Port (a 5-digit number, not 3306)
+        sync: false
+      - key: DB_PASSWORD        # Aiven > Password (user avnadmin)
+        sync: false
+      - key: ADMIN_PASSWORD     # choose the admin login password for the website
+        sync: false
+      - key: GOOGLE_CLIENT_ID   # Google Cloud > Credentials > OAuth client ID (Web). Optional.
+        sync: false
+      - key: ADMIN_GOOGLE_EMAILS  # Google emails that become admin, comma separated. Optional.
+        sync: false
+      - key: UPI_ID             # the shop's UPI ID (e.g. yourname@okaxis) for top-up QR codes. Optional.
+        sync: false
+      - key: DB_USER
+        value: avnadmin
+      - key: DB_NAME
+        value: defaultdb
+      - key: DB_SSL
+        value: "1"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DEVICE_KEY         # the Raspberry Pi sends this in X-Device-Key
+        generateValue: true
+      - key: ADMIN_EMAIL
+        value: admin@smartcart.local
+      - key: HARDWARE_MODE      # starting value; change it later on Admin > Hardware
+        value: "off"
+      - key: WALLET_WELCOME_AMOUNT   # demo money for every new account (0 = top up at the counter)
+        value: "0"
+      - key: FLASK_DEBUG
+        value: "0"

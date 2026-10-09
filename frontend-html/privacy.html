@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Privacy policy - SmartCart</title>
+  <meta name="description" content="SmartCart Privacy policy.">
+  <meta name="theme-color" content="#efdc86">
+  <link rel="icon" href="favicon.svg?v=2.8.4" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="SmartCart">
+  <link rel="stylesheet" href="css/style.css?v=2.8.4">
+</head>
+<body>
+  <div class="app">
+    <header class="page-head">
+      <div>
+        <h1>Privacy policy</h1>
+        <p class="subtitle">Last updated 6 October 2026</p>
+      </div>
+      <div><a class="btn btn-outline btn-sm" href="index.html">Shop</a></div>
+    </header>
+    <main class="card legal">
+      <p>SmartCart (Smart Billing Cart) is a side project: a self-checkout that checks every item by its barcode, its weight and a camera photo. This page explains what it stores about you and why.</p>
+      <h2>What we store</h2>
+      <ul>
+        <li><b>Your account</b>: name, email, optional organisation, and either a scrambled (hashed) password or, if you use Google sign-in, your Google account ID. We never see your Google password.</li>
+        <li><b>Shopping</b>: your cart, orders, bills and whether a bill was used at the exit.</li>
+        <li><b>Wallet</b>: your balance, every top-up and payment, and the staff member who confirmed each top-up.</li>
+        <li><b>Cart checks</b>: weights from the cart's scale and photos taken by the cart camera. The camera points down at the weighing platform to see the item, not at people.</li>
+        <li><b>Security</b>: the number of wrong passwords from your email or network address, kept only in the server's memory for 15 minutes to stop password guessing.</li>
+      </ul>
+      <h2>Why</h2>
+      <p>To run the shop (cart, bills, wallet), to stop fraud such as scanning a cheap item's code for an expensive one, to check bills at the exit, and to keep accounts safe.</p>
+      <h2>Payments</h2>
+      <p>SmartCart never asks for card or bank details. Money is added to the wallet in person at the counter, by cash or UPI, and staff confirm it.</p>
+      <h2>Where it is kept</h2>
+      <p>The website runs on Render and the database on Aiven (MySQL, encrypted connection). Camera photos sit on the server's temporary disk and disappear when it restarts. Your browser keeps your login on this device until you sign out.</p>
+      <h2>Sharing</h2>
+      <p>Your data is not sold or shared. Google is involved only if you choose "Continue with Google". Project staff (admins) can see orders, flagged scans and wallet activity to run the shop.</p>
+      <h2>Your choices</h2>
+      <p>You can change your name and password on the Profile page, sign out at any time, and ask the project team to delete your account and its data.</p>
+    </main>
+    <p class="legal-links"><a href="terms.html">Terms of use</a> &middot; <a href="privacy.html">Privacy policy</a></p>
+  </div>
+  <script src="js/api.js?v=2.8.4"></script>
+  <script src="js/ui.js?v=2.8.4"></script>
+  <script>renderNav('user');</script>
+</body>
+</html>
