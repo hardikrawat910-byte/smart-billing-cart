@@ -94,6 +94,12 @@ async function startCamera() {
   document.getElementById('scanner-box').hidden = false;
   document.getElementById('scan-label').hidden = false;
   status.textContent = 'Starting camera...';
+  // Firefox leaves the camera request waiting if its permission prompt is closed: say what to do.
+  setTimeout(() => {
+    if (status.textContent === 'Starting camera...') {
+      status.textContent = 'The camera has not started: allow it in the address bar (camera icon) and reload, or type the bill code below.';
+    }
+  }, 12000);
   if (!window.isSecureContext) { status.textContent = 'The camera needs https or localhost - type the bill code below.'; return; }
   try {
     await startCodeScanner('reader', onDecode, onNoCode, { qrOnly: true });

@@ -1,4 +1,4 @@
-# SmartCart - full setup and technical guide  (v2.8.4)
+# SmartCart - full setup and technical guide  (v2.8.5)
 
 Back to the [project overview](README.md).
 
@@ -239,7 +239,7 @@ off, or "old Pi program" (a cart_agent.py from before v2.8.4 - copy the new one 
 - **Memory cache:** the catalogue is kept in the server's RAM; the shop, product pages and every scan
   are answered without asking MySQL. Admin edits and checkouts clear it at once, and it refreshes
   itself every 5 minutes. Hit rate is shown under Admin > Hardware.
-- Pages' CSS/JS are cached by the browser for a week (`?v=2.8.4` in the links changes with each version);
+- Pages' CSS/JS are cached by the browser for a week (`?v=2.8.5` in the links changes with each version);
   pages themselves and all API answers are never cached stale.
 - 5 wrong passwords for an email lock it for 15 minutes (`LOGIN_MAX_FAILURES`, `LOGIN_LOCK_MINUTES`).
 - Security headers on every response (no MIME sniffing, no framing, camera only for this site,

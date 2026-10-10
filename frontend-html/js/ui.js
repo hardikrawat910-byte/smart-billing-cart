@@ -203,7 +203,11 @@ async function startCodeScanner(elementId, onDecode, onNoCode, { qrOnly = false 
   // and only shrink it visually (a transform doesn't change the layout size).
   const el = document.getElementById(elementId);
   el.classList.add('scan-surface');
-  const [w, h, fps] = ON_PI ? [640, 480, 5] : [1280, 720, 12];
+  // QR-only staff pages (wallet counter, exit gate) read a code held up close: a small picture a few
+  // times a second is plenty and keeps slower computers (and Firefox) responsive. Barcodes on packs
+  // need the big picture.
+  const FIREFOX = /Firefox\//.test(navigator.userAgent);
+  const [w, h, fps] = (ON_PI || qrOnly) ? [640, 480, 5] : (FIREFOX ? [1280, 720, 6] : [1280, 720, 12]);
   el.style.width = `${w}px`;
   const scanner = new Html5Qrcode(elementId, { verbose: false, formatsToSupport: formats, useBarCodeDetectorIfSupported: true });
   await scanner.start({ facingMode: 'environment' }, {

@@ -5,7 +5,7 @@ from urllib.parse import quote_plus
 
 from dotenv import load_dotenv
 
-APP_VERSION = "2.8.4"
+APP_VERSION = "2.8.5"
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 

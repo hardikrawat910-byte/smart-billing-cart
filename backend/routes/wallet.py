@@ -191,7 +191,7 @@ def overview(staff):
 
 def pi_reader():
     """The Raspberry Pi program as the counter needs it: is it running, is its camera reading codes,
-    and is it new enough to pass top-up tokens here (v2.8.4+ says so with the "tokens" role)."""
+    and is it new enough to pass top-up tokens here (v2.8.5+ says so with the "tokens" role)."""
     pis = [d for d in devices.list() if d["device_id"].startswith("rpi") or "exit" in (d.get("roles") or [])]
     if not pis:
         return None
