@@ -130,6 +130,16 @@ render.yaml      One-click hosting on Render
 SETUP.md         Full setup and technical guide
 ```
 
+## From prototype to product
+
+SmartCart began as a Figma design in July 2026, then an AI-generated shopping-app prototype on Lovable in August (6 electronics parts, no hardware, no checks), moved to our own Flask + ESP32 design in September, switched to a Raspberry Pi in October and reached v2.8.5 with a wallet, an exit gate and barcode + weight + camera verification. The full story, with a side-by-side comparison: **[JOURNEY.md](JOURNEY.md)**.
+
+<p align="center">
+  <img src="docs/journey/lovable-prototype-home.png" width="200" alt="The August Lovable prototype">
+  <img src="docs/screenshots/01_home.png" width="200" alt="SmartCart v2.8.5 home page">
+</p>
+<p align="center"><sub>Left: the Lovable prototype (August). Right: SmartCart v2.8.5 (October).</sub></p>
+
 ## Team
 
 - Shivraj Morde
