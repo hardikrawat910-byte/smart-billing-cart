@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Sign in - SmartCart</title>
   <meta name="theme-color" content="#efdc86">
-  <link rel="icon" href="favicon.svg?v=2.8.5" type="image/svg+xml">
+  <link rel="icon" href="favicon.svg?v=2.9.0" type="image/svg+xml">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="SmartCart">
-  <link rel="stylesheet" href="css/style.css?v=2.8.5">
+  <link rel="stylesheet" href="css/style.css?v=2.9.0">
 </head>
 <body>
   <div class="app" style="display:flex;flex-direction:column;justify-content:center;padding-bottom:40px">
@@ -39,6 +39,10 @@
           <label class="label" for="password">Password</label>
           <input class="input" id="password" type="password" autocomplete="current-password" placeholder="At least 8 characters">
           <p class="field-error" data-for="password"></p>
+          <details class="forgot"><summary class="xs muted">Forgot your password?</summary>
+            <p class="xs muted" style="margin-top:6px">Ask at the Wallet counter: staff check it is you and give you a
+              one-time password, then you choose a new one under Profile. If you signed up with Google, just use
+              "Continue with Google".</p></details>
         </div>
         <button class="btn btn-block" type="submit" id="submit">Login</button>
       </form>
@@ -55,8 +59,8 @@
     <p class="small center" style="margin-top:16px"><a href="index.html" class="muted">Browse the catalogue first</a></p>
     <p class="legal-links">By continuing you agree to the <a href="terms.html">Terms of use</a> and <a href="privacy.html">Privacy policy</a>.</p>
   </div>
-  <script src="js/api.js?v=2.8.5"></script>
-  <script src="js/ui.js?v=2.8.5"></script>
-  <script src="js/login.js?v=2.8.5"></script>
+  <script src="js/api.js?v=2.9.0"></script>
+  <script src="js/ui.js?v=2.9.0"></script>
+  <script src="js/login.js?v=2.9.0"></script>
 </body>
 </html>

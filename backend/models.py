@@ -242,7 +242,7 @@ class HardwareReading(db.Model):
             "kind": self.kind,
             "weight_g": num(self.weight_g),
             "color_hex": self.color_hex,
-            "image_url": f"/api/hardware/images/{self.image_file}" if self.image_file else None,
+            "image_url": _image_url(self.image_file),
             "consumed": self.consumed_at is not None,
             "created_at": iso(self.created_at),
             "age_sec": round(age, 1) if age is not None else None,
@@ -450,7 +450,7 @@ class ShoppingListItem(db.Model):
 
 HELP_REASONS = {
     "wont_scan": "An item won't scan",
-    "weight": "The cart says the weight is wrong",
+    "weight": "The cart or exit gate is not working",
     "payment": "Help with the wallet or payment",
     "find": "Can't find an item",
     "other": "Something else",
@@ -489,3 +489,8 @@ class HelpRequest(db.Model):
             "created_at": iso(self.created_at),
             "age_sec": round(age) if age is not None else None,
         }
+
+
+def _image_url(filename):
+    from services import image_url          # services imports models, so import here
+    return image_url(filename)

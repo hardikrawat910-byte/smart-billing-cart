@@ -220,6 +220,27 @@ def direct_credit(staff):
     return jsonify(transaction=txn.to_dict(with_user=True)), 201
 
 
+@counter_bp.post("/reset-password")
+@admin_required
+def reset_password(staff):
+    """A customer who forgot their password asks at the counter. Staff check who they are and get a
+    one-time password to read out; the customer then sets their own under Profile. Staff and admin
+    accounts can't be reset this way."""
+    import secrets
+    from werkzeug.security import generate_password_hash
+    email = str(json_body().get("email") or "").strip().lower()
+    customer = User.query.filter_by(email=email).first()
+    if customer is None:
+        return error("No customer with that email", 404, fields={"email": "No customer with that email"})
+    if customer.role == "admin":
+        return error("Staff passwords can't be reset here", 403)
+    temporary = "-".join(secrets.token_hex(2) for _ in range(3))        # e.g. 4f1a-09bc-e2d7
+    customer.password_hash = generate_password_hash(temporary)
+    db.session.commit()
+    current_app.logger.info("Password reset at the counter for user %s by staff %s", customer.id, staff.id)
+    return jsonify(email=customer.email, name=customer.full_name, temporary_password=temporary)
+
+
 @counter_bp.get("/customers")
 @admin_required
 def customers(staff):

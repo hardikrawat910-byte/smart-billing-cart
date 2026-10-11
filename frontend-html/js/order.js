@@ -31,6 +31,7 @@ async function load() {
         <div class="row between"><span class="small muted">Total charged</span>
           <span style="font-size:1.125rem;font-weight:700;color:var(--primary)">${money(o.total_amount)}</span></div>
         ${o.savings > 0 ? `<div class="row between small saving-row" style="margin-top:6px"><span>${icon('tag', 14)} You saved on offers</span><span>${money(o.savings)}</span></div>` : ''}
+        <p class="xs muted" style="margin-top:6px">Prices include GST.</p>
         ${o.payment && o.payment.method === 'wallet' ? `<p class="xs muted row" style="gap:6px;margin-top:8px">${icon('wallet', 14)} Paid from SmartCart Wallet &middot; <span class="mono">${esc(o.payment.ref)}</span></p>` : ''}
       </div>
       <div class="card" style="margin-top:16px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center">

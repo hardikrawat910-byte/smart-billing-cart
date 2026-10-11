@@ -1,11 +1,15 @@
-# SmartCart - full setup and technical guide  (v2.8.5)
+# SmartCart - full setup and technical guide  (v2.9.0)
 
 Back to the [project overview](README.md).
 
 A self-checkout cart for a neighbourhood general store: shoppers scan items with their phone, pay from
 a SmartCart Wallet and walk out. Flask + MySQL backend, HTML/CSS/JS website (installable as an app), and
-a Raspberry Pi (Pi camera + load cell + LEDs/buzzer) that verifies every item by **barcode + weight +
-camera colour**, beeps when something goes into the cart unscanned, and checks the bill QR at the exit.
+a Raspberry Pi (Pi camera + LEDs/buzzer) that checks the bill QR at the exit and reads wallet top-up tokens.
+
+**Cart scale: switched off (v2.9.0).** The weight + camera-colour check of every item (load cell + HX711)
+is built and tested, but our HX711 board would not answer, so the server runs with `SCALE_ENABLED` off:
+items are added by barcode/QR alone and the website hides everything about the scale. With a working
+scale, set `SCALE_ENABLED=1` and everything below about weights comes back - nothing else changes.
 
 ```
  phone (website)  --scan barcode-->  SmartCart website (Flask + MySQL, Render)  <--HTTPS out--  Raspberry Pi
@@ -13,6 +17,10 @@ camera colour**, beeps when something goes into the cart unscanned, and checks t
                                                                                                 LEDs + buzzer
 ```
 The Pi never accepts incoming connections: it only calls out to the website with its device key.
+
+## How we got here
+July 2026: Figma design -> August: AI-generated Lovable prototype -> September: own Flask + ESP32 design -> 5 October: Raspberry Pi
+-> v2.5 to v2.9.0. Full story and prototype-vs-final comparison: [JOURNEY.md](JOURNEY.md).
 
 ## Run it on your PC (Windows commands; Mac/Linux use `source venv/bin/activate`)
 
@@ -73,6 +81,8 @@ work once, and balances change only under a database row lock. Staff can also ad
 (refunds, demo money). `WALLET_WELCOME_AMOUNT` (default 0) gives every new account demo money.
 
 ## Verification modes (Admin > Hardware - switch any time, no restart)
+Only with `SCALE_ENABLED=1`. While it is off (the default), the mode is always `off` and the server
+refuses `weight`/`full`, calibration and the simulator.
 
 | Mode | What must agree before an item enters the cart |
 |---|---|
@@ -146,6 +156,9 @@ Prices, stock and money always come live from the server; with no connection the
 friendly "You are offline" page (`sw.js`, `manifest.webmanifest`, `offline.html`, `icons/`).
 
 ## Raspberry Pi (cart scale + exit gate)
+While the website has the scale switched off (`SCALE_ENABLED` unset), the Pi program skips the
+scale by itself and runs only the exit gate and wallet tokens. It also keeps going without the scale
+when the HX711 doesn't answer or isn't calibrated, instead of stopping.
 
 Pi 4 + Pi Camera v2 + HX711 with a load cell + green LED + red LED + buzzer. Program: `pi/`
 (full guide in `pi/README.md`).
@@ -239,10 +252,22 @@ off, or "old Pi program" (a cart_agent.py from before v2.8.4 - copy the new one 
 - **Memory cache:** the catalogue is kept in the server's RAM; the shop, product pages and every scan
   are answered without asking MySQL. Admin edits and checkouts clear it at once, and it refreshes
   itself every 5 minutes. Hit rate is shown under Admin > Hardware.
-- Pages' CSS/JS are cached by the browser for a week (`?v=2.8.5` in the links changes with each version);
+- Pages' CSS/JS are cached by the browser for a week (`?v=2.9.0` in the links changes with each version);
   pages themselves and all API answers are never cached stale.
 - 5 wrong passwords for an email lock it for 15 minutes (`LOGIN_MAX_FAILURES`, `LOGIN_LOCK_MINUTES`).
-- Security headers on every response (no MIME sniffing, no framing, camera only for this site,
+- **Rate limits** on every API call: 300 a minute per logged-in user (1200 per network address when
+  logged out - a whole campus can share one), 60 changes a minute per user, 20 sign-ups an hour per
+  address. Too many gets `429` with a `Retry-After`. `RATE_LIMIT=0` switches it off (tests).
+- **Content-Security-Policy** on every page: only the site's own scripts (and Google's sign-in button)
+  run, so an injected `<script>` or `onclick=` is blocked. No page has inline scripts.
+- **CORS** allows only the site itself (plus VS Code Live Server on port 5500, or `CORS_ORIGINS`).
+- **Cart camera photos** open only through a signed link the server hands to logged-in pages.
+- **Pinned dependencies:** `requirements.txt` lists exact versions, so a deploy installs exactly what
+  was tested. **Compressed** pages and scripts (brotli/gzip): the scanner library is 375 KB -> ~105 KB.
+- **Forgot password:** the login page tells the customer to ask at the Wallet counter; staff check who
+  they are and press *Customer forgot their password* to get a one-time password (staff and admin
+  accounts can't be reset that way). Then the customer sets their own under Profile.
+- Security headers on every response (no MIME sniffing, no framing, camera and microphone only for this site,
   HTTPS-only on the public site). Passwords are hashed; prices always come from the database;
   bills are HMAC-signed and work once; hardware needs the device key.
 

@@ -13,6 +13,8 @@ const REASONS = {
 };
 
 function init() {
+  // Show the scale parts of the admin page only when the server has a scale (SCALE_ENABLED).
+  api('/api/health').then((h) => document.body.classList.toggle('no-scale', !h.scale)).catch(() => {});
   if (!Auth.require()) return;
   if (!Auth.isAdmin()) {
     document.getElementById('main').innerHTML = '<div class="card small muted center">This page is for admin accounts only.</div>';
@@ -115,7 +117,7 @@ function renderDashboard(d) {
       </details>
     </div>
 
-    <div class="card" style="margin-top:12px">
+    <div class="card scale-only" style="margin-top:12px">
       <p class="small" style="font-weight:600">${icon('shield', 16)} Caught by the cart this week</p>
       <dl class="kv">
         <dt>Scans stopped by the checks</dt><dd>${f.flags}</dd>
@@ -366,12 +368,12 @@ function productRow(p) {
         <span class="badge ${p.status === 'published' ? 'badge-solid' : ''}">${p.status}</span></div>
       <p class="xs muted">${esc(p.category)} &middot; ${money(p.price)}${p.mrp > p.price ? ` <s>${money(p.mrp).replace('.00', '')}</s> <span class="save-pill">Offer</span>` : ''} &middot; stock ${p.stock}</p>
       <p class="mono muted">${esc(p.qr_code)}</p>
-      <p class="xs muted" style="margin-top:2px">${weightRef} &middot; ${colorRef}</p>
+      <p class="xs muted scale-only" style="margin-top:2px">${weightRef} &middot; ${colorRef}</p>
       <div class="row" style="gap:4px;margin-top:8px;flex-wrap:wrap">
         <button type="button" class="btn btn-outline btn-sm" data-act="edit" data-id="${p.id}">${icon('edit', 13)} Edit</button>
         <button type="button" class="btn btn-ghost btn-sm" data-act="toggle" data-id="${p.id}">${p.status === 'published' ? icon('eyeoff', 13) + ' Unpublish' : icon('eye', 13) + ' Publish'}</button>
         <button type="button" class="btn btn-ghost btn-sm" data-act="photo" data-id="${p.id}">${icon('camera2', 13)} ${(p.image_url || '').startsWith('/api/products/') ? 'Retake' : 'Photo'}</button>
-        <button type="button" class="btn btn-ghost btn-sm" data-act="calibrate" data-id="${p.id}">${icon('scale', 13)} Calibrate</button>
+        <button type="button" class="btn btn-ghost btn-sm scale-only" data-act="calibrate" data-id="${p.id}">${icon('scale', 13)} Calibrate</button>
         <button type="button" class="btn btn-ghost btn-sm" data-act="qr" data-id="${p.id}">${icon('qr', 13)} QR</button>
         <button type="button" class="btn btn-ghost btn-icon" style="margin-left:auto" data-act="delete" data-id="${p.id}" aria-label="Delete ${esc(p.name)}">${icon('trash', 15)}</button>
       </div>
@@ -726,7 +728,13 @@ function renderHardware() {
   alertsKey = '';
   const el = document.getElementById('tab-hardware');
   el.innerHTML = `
-    <div class="card">
+    <div class="card scale-off-only">
+      <p class="small" style="font-weight:600">${icon('scale', 16)} Cart scale: switched off</p>
+      <p class="xs muted" style="margin-top:4px">Items are added by their barcode or QR code. The weight and camera-colour
+        checks are built but switched off on this server (<span class="mono">SCALE_ENABLED</span>) until a working
+        load cell is fitted. The Pi camera still checks bills at the exit and reads wallet top-up tokens.</p>
+    </div>
+    <div class="card scale-only">
       <p class="small" style="font-weight:600">Verification mode</p>
       <div class="segmented" id="mode-switch" role="group" aria-label="Verification mode">
         ${['off', 'weight', 'full'].map((m) => `<button type="button" data-mode="${m}">${m}</button>`).join('')}
@@ -737,12 +745,12 @@ function renderHardware() {
       <p class="small" style="font-weight:600">${icon('chip', 16)} Devices</p>
       <div id="a-devices" style="margin-top:8px">${Skel.line(70)}${Skel.line(50, 8)}</div>
     </div>
-    <div class="card" style="margin-top:16px">
+    <div class="card scale-only" style="margin-top:16px">
       <p class="small" style="font-weight:600">${icon('alert', 16)} Put in without scanning</p>
       <p class="xs muted" style="margin-top:4px">Weight landed on a cart's scale but no scan used it. These clear by themselves when the item is scanned or taken out.</p>
       <div id="a-alerts" style="margin-top:8px"><p class="xs muted">Checking&hellip;</p></div>
     </div>
-    <div class="hw">
+    <div class="hw scale-only">
       <div class="card"><p class="xs muted">Latest weight</p><p class="value tabular" id="a-weight">-</p><p class="xs muted" id="a-weight-age"></p></div>
       <div class="card"><p class="xs muted">Latest camera</p><img class="cam-thumb" id="a-cam-img" alt="Latest camera capture" hidden><p class="xs muted" id="a-cam-age"></p></div>
     </div>
@@ -751,7 +759,7 @@ function renderHardware() {
       <p class="xs muted" style="margin-top:4px">Products are kept in the server's memory, so the shop and every scan skip the database.</p>
       <dl class="kv" id="a-cache"></dl>
     </div>
-    <div class="card" style="margin-top:16px">
+    <div class="card scale-only" style="margin-top:16px">
       <p class="small" style="font-weight:600">Simulator (demo without hardware)</p>
       <p class="xs muted" style="margin:4px 0 12px">Sends readings exactly like the Raspberry Pi would. Scan the item within <span id="a-age">15</span> seconds.</p>
       <div class="row"><input class="input" id="sim-weight" type="number" step="0.1" placeholder="Weight in grams"><button type="button" class="btn" id="sim-weight-btn">Send</button></div>

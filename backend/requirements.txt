@@ -1,13 +1,20 @@
-flask>=3.0
-flask-cors>=4.0
-flask-sqlalchemy>=3.1
-flask-jwt-extended>=4.6
-pymysql>=1.1
-cryptography>=42.0
-python-dotenv>=1.0
-pillow>=10.4
+# Exact versions: a deploy installs exactly what was tested, never a surprise new release.
+# To upgrade: change a number here, run the tests, then deploy.
+flask==3.1.3
+werkzeug==3.1.9
+flask-cors==6.0.5
+flask-sqlalchemy==3.1.1
+sqlalchemy==2.1.1
+flask-jwt-extended==4.7.4
+pyjwt==2.15.1
+pymysql==1.2.3
+cryptography==50.0.1
+python-dotenv==1.2.3
+pillow==12.3.0
+# smaller pages and scripts over slow networks (gzip / brotli)
+flask-compress==1.25
 # Google sign-in: checks Google's token signature
-google-auth>=2.30
-requests>=2.31
+google-auth==2.59.1
+requests==2.34.2
 # production web server for online hosting (Render). Not needed on Windows.
-gunicorn>=22.0; sys_platform != "win32"
+gunicorn==26.2.0; sys_platform != "win32"

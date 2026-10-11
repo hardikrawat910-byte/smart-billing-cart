@@ -207,6 +207,27 @@ document.getElementById('credit-form').addEventListener('submit', async (e) => {
   setBusy(btn, false);
 });
 
+document.getElementById('reset-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('r-email').value.trim();
+  const out = document.getElementById('r-result');
+  if (!email) { out.innerHTML = '<p class="xs bad" style="margin-top:8px">Type the customer\'s email first.</p>'; return; }
+  if (!confirm(`Reset the password for ${email}? Their old password stops working.`)) return;
+  const btn = document.getElementById('r-submit');
+  setBusy(btn, true);
+  try {
+    const r = await api('/api/counter/reset-password', { method: 'POST', body: { email } });
+    out.innerHTML = `<div class="card" style="margin-top:10px;padding:12px">
+      <p class="small">${esc(r.name)} can now sign in with:</p>
+      <p class="mono" style="font-size:1.3rem;font-weight:700;margin:6px 0">${esc(r.temporary_password)}</p>
+      <p class="xs muted">Shown once. Tell them to choose a new password under Profile.</p></div>`;
+    e.target.reset();
+  } catch (err) {
+    out.innerHTML = `<p class="xs bad" style="margin-top:8px">${esc(err.message)}</p>`;
+  }
+  setBusy(btn, false);
+});
+
 function init() {
   if (!Auth.require()) return;
   if (!Auth.isAdmin()) {

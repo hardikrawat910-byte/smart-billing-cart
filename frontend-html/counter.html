@@ -6,12 +6,12 @@
   <title>Wallet counter - SmartCart</title>
   <meta name="description" content="SmartCart staff counter: confirm wallet top-ups paid by cash or UPI.">
   <meta name="theme-color" content="#efdc86">
-  <link rel="icon" href="favicon.svg?v=2.8.5" type="image/svg+xml">
+  <link rel="icon" href="favicon.svg?v=2.9.0" type="image/svg+xml">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="SmartCart">
-  <link rel="stylesheet" href="css/style.css?v=2.8.5">
+  <link rel="stylesheet" href="css/style.css?v=2.9.0">
 </head>
 <body>
   <div class="app">
@@ -63,12 +63,22 @@
         <button class="btn btn-block" type="submit" id="c-submit">Add to wallet</button>
       </form>
 
+      <details class="card" id="reset-box" style="margin-top:12px">
+        <summary class="small" style="font-weight:600;cursor:pointer">Customer forgot their password</summary>
+        <form id="reset-form" class="row" style="margin-top:10px" novalidate>
+          <input class="input" id="r-email" type="email" list="c-list" autocomplete="off" placeholder="Customer email" aria-label="Customer email">
+          <button class="btn" type="submit" id="r-submit">Reset</button>
+        </form>
+        <p class="xs muted" style="margin-top:6px">Check it is really them first. They get a one-time password to sign in with, then set their own under Profile.</p>
+        <div id="r-result" aria-live="polite"></div>
+      </details>
+
       <h2 class="section-title">Recent wallet activity</h2>
       <div class="card" style="padding:4px 16px" id="recent"></div>
     </main>
   </div>
-  <script src="js/api.js?v=2.8.5"></script>
-  <script src="js/ui.js?v=2.8.5"></script>
-  <script src="js/counter.js?v=2.8.5"></script>
+  <script src="js/api.js?v=2.9.0"></script>
+  <script src="js/ui.js?v=2.9.0"></script>
+  <script src="js/counter.js?v=2.9.0"></script>
 </body>
 </html>

@@ -3,14 +3,16 @@ import mimetypes
 import os
 
 from flask import Flask, jsonify, request, send_from_directory
+from flask_compress import Compress
 from flask_cors import CORS
+from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
 from werkzeug.exceptions import HTTPException
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from config import APP_VERSION, Config
 from extensions import db, jwt
 from routes import register_blueprints
-from security import add_security_headers
+from security import add_security_headers, rate_limiter
 from services import hardware_mode
 
 # Some Windows PCs map .js to text/plain in the registry, which can stop the pages' scripts.
@@ -45,15 +47,45 @@ def create_app():
     app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 
     # JWT travels in the Authorization header (no cookies), so "*" is safe for local dev.
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
+    # The site calls its own API (same address, no CORS needed). Only VS Code Live Server (port 5500)
+    # serves the pages from elsewhere; CORS_ORIGINS can add more, comma separated.
+    extra = [o.strip() for o in os.getenv("CORS_ORIGINS", "").split(",") if o.strip()]
+    CORS(app, resources={r"/api/*": {"origins": ["http://127.0.0.1:5500", "http://localhost:5500", *extra]}})
     db.init_app(app)
     jwt.init_app(app)
     register_blueprints(app)
     app.after_request(add_security_headers)
+    # gzip/brotli: the scanner library goes from 375 KB to about 100 KB on the wire
+    app.config.setdefault("COMPRESS_MIMETYPES", ["text/html", "text/css", "application/javascript",
+                                                  "text/javascript", "application/json", "image/svg+xml",
+                                                  "application/manifest+json", "text/csv"])
+    app.config.setdefault("COMPRESS_MIN_SIZE", 1024)
+    app.config.setdefault("COMPRESS_ALGORITHM", ["br", "gzip", "deflate"])
+    app.config.setdefault("COMPRESS_ALGORITHM_STREAMING", ["br", "gzip", "deflate"])   # files are streamed
+    Compress(app)
+
+    @app.before_request
+    def limit_api_rate():
+        if not request.path.startswith("/api/") or request.path == "/api/health":
+            return None
+        identity = None
+        try:
+            verify_jwt_in_request(optional=True)
+            identity = get_jwt_identity()
+        except Exception:                     # bad or expired token: the route itself will say so
+            pass
+        wait = rate_limiter.check(f"user:{identity}" if identity else None)
+        if not wait:
+            return None
+        response = jsonify(error=f"Too many requests. Please wait {wait} seconds and try again.")
+        response.status_code = 429
+        response.headers["Retry-After"] = str(wait)
+        return response
 
     @app.get("/api/health")
     def health():
-        return jsonify(ok=True, hardware_mode=hardware_mode(), version=APP_VERSION)
+        return jsonify(ok=True, hardware_mode=hardware_mode(), scale=bool(app.config["SCALE_ENABLED"]),
+                       version=APP_VERSION)
 
     frontend = app.config["FRONTEND_DIR"]
 

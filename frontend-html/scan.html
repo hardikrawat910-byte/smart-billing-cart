@@ -4,14 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Scan - SmartCart</title>
-  <meta name="description" content="SmartCart - scan items, verify them by weight and camera, pay from your wallet and skip the billing queue.">
+  <meta name="description" content="SmartCart - scan items with your phone, pay from your wallet, and leave through a camera-checked exit. No billing queue.">
   <meta name="theme-color" content="#efdc86">
-  <link rel="icon" href="favicon.svg?v=2.8.5" type="image/svg+xml">
+  <link rel="icon" href="favicon.svg?v=2.9.0" type="image/svg+xml">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="SmartCart">
-  <link rel="stylesheet" href="css/style.css?v=2.8.5">
+  <link rel="stylesheet" href="css/style.css?v=2.9.0">
 </head>
 <body>
   <div class="app">
@@ -36,7 +36,7 @@
       <div id="denied" class="card" style="margin-top:16px;border-color:var(--destructive)" hidden>
         <p style="font-weight:600">Camera unavailable</p>
         <p class="small muted" id="denied-text" style="margin:6px 0 12px"></p>
-        <button class="btn btn-secondary btn-sm" type="button" onclick="location.reload()">Retry camera</button>
+        <a class="btn btn-secondary btn-sm" href="">Retry camera</a>
       </div>
       <p class="small muted center" id="cam-status" style="margin-top:16px">Starting camera...</p>
       <div class="center" style="margin-top:8px"><button type="button" class="btn-link small" id="manual-toggle">Enter code manually</button></div>
@@ -68,8 +68,8 @@
     <main hidden>
     </main>
   </div>
-  <script src="js/api.js?v=2.8.5"></script>
-  <script src="js/ui.js?v=2.8.5"></script>
-  <script src="js/scan.js?v=2.8.5"></script>
+  <script src="js/api.js?v=2.9.0"></script>
+  <script src="js/ui.js?v=2.9.0"></script>
+  <script src="js/scan.js?v=2.9.0"></script>
 </body>
 </html>

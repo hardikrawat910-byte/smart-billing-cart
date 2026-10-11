@@ -36,7 +36,7 @@ import time
 import urllib.error
 import urllib.request
 
-AGENT_VERSION = "2.8.4"
+AGENT_VERSION = "2.9.0"
 HERE = os.path.dirname(os.path.abspath(__file__))
 CONFIG_PATH = os.path.join(HERE, "cart_agent.ini")
 
@@ -866,6 +866,7 @@ class Agent:
             status, payload = self.server.health()
             if status == 200:
                 self.mode = payload.get("hardware_mode")
+                self.server_scale = payload.get("scale", True)      # older servers don't say
                 print(f"Server OK (verification mode: {self.mode}).", flush=True)
                 return
             print(f"Cannot reach the SmartCart server: {explain(status, payload)}.\n"
@@ -1019,13 +1020,23 @@ class Agent:
             self.connect()
             if self.stop.is_set():
                 return
-            self.scale = build_scale(cfg, typed, args.script, self.pins)
+            if getattr(self, "server_scale", True) is False and not args.simulate:
+                print("The website has the cart scale switched off: running the exit gate and wallet tokens only.",
+                      flush=True)
+            else:
+                self.scale = build_scale(cfg, typed, args.script, self.pins)
             if self.scale is not None:
                 if not typed and not self.scale.factor:
-                    raise SystemExit("Not calibrated yet. Run:  python3 cart_agent.py calibrate\n"
-                                     "(or set [scale] enabled = no to run only the exit gate)")
+                    print("Scale not calibrated yet (python3 cart_agent.py calibrate): running without it.",
+                          flush=True)
+                    self.scale = None
+            if self.scale is not None:
                 print("Taring - keep the platform empty...", flush=True)
-                self.scale.tare()
+                try:
+                    self.scale.tare()
+                except RuntimeError as err:          # HX711 missing or not wired: keep the exit gate going
+                    print(f"{err} Running without the scale: exit gate and wallet tokens still work.", flush=True)
+                    self.scale = None
             self.camera = build_camera(cfg, args.simulate, args.sim_colour, args.sim_view)
             if self.camera is not None:
                 print("Camera ready" + (" (colours locked)." if getattr(self.camera, "locked", False) else "."),

@@ -79,6 +79,69 @@ def verify_google_token(credential):
 STATIC_CACHE_SECONDS = 7 * 24 * 3600
 
 
+CSP = "; ".join([
+    "default-src 'self'",
+    "script-src 'self' https://accounts.google.com",
+    "style-src 'self' 'unsafe-inline' https://accounts.google.com",    # pages use style="" attributes
+    "img-src 'self' data: blob: https:",                                # product photos can be web links
+    "connect-src 'self' https://accounts.google.com",
+    "frame-src https://accounts.google.com",
+    "font-src 'self'",
+    "media-src 'self' blob:",
+    "worker-src 'self'",
+    "manifest-src 'self'",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'self'",
+])
+
+
+class RateLimiter:
+    """Stops one person or script from flooding the API. Counts requests per logged-in user
+    (or per network address when not logged in) in a sliding window. Memory only, like LoginGuard.
+    A whole campus can share one address, so the anonymous limit is higher."""
+
+    def __init__(self):
+        self._lock = threading.Lock()
+        self._hits = {}
+
+    def _take(self, key, limit, window, now):
+        """Record a hit; return seconds to wait if the key is over its limit, else 0."""
+        stamps = [t for t in self._hits.get(key, []) if now - t < window]
+        if len(stamps) >= limit:
+            self._hits[key] = stamps
+            return int(window - (now - stamps[0])) + 1
+        stamps.append(now)
+        self._hits[key] = stamps
+        if len(self._hits) > 20000:          # forget idle keys so memory stays small
+            for k in [k for k, v in self._hits.items() if not v or now - v[-1] > 3600][:10000]:
+                self._hits.pop(k, None)
+        return 0
+
+    def check(self, identity):
+        """0 if this API request may go ahead, otherwise how many seconds to wait."""
+        cfg = current_app.config
+        if not cfg.get("RATE_LIMIT_ENABLED", True):
+            return 0
+        now = time.time()
+        ip = client_ip()
+        rules = []
+        if request.headers.get("X-Device-Key"):                     # the Raspberry Pi
+            rules.append((f"dev:{ip}", 600, 60))
+        else:
+            if request.method == "POST" and request.path == "/api/auth/register":
+                rules.append((f"reg:{ip}", cfg.get("REGISTER_PER_HOUR", 20), 3600))
+            if request.method != "GET":
+                rules.append((f"w:{identity or ip}", 60, 60))      # changes: 1 a second on average
+            rules.append((f"all:{identity}", 300, 60) if identity else (f"anon:{ip}", 1200, 60))
+        with self._lock:
+            return max([self._take(key, limit, window, now) for key, limit, window in rules] or [0])
+
+
+rate_limiter = RateLimiter()
+
+
 def add_security_headers(response):
     """Headers that tell the browser to be stricter with this site."""
     h = response.headers
@@ -87,7 +150,11 @@ def add_security_headers(response):
     # Google's sign-in button needs the page address on plain-http localhost (Google's guide)
     h.setdefault("Referrer-Policy", "strict-origin-when-cross-origin" if request.is_secure
                  else "no-referrer-when-downgrade")
-    h.setdefault("Permissions-Policy", "camera=(self), microphone=(), geolocation=()")
+    # microphone: the shop's voice search (Chrome's speech recognition needs it)
+    h.setdefault("Permissions-Policy", "camera=(self), microphone=(self), geolocation=()")
+    # Only our own scripts run (plus Google's sign-in button): an injected <script> or onclick= is blocked.
+    if "text/html" in (response.content_type or ""):
+        h.setdefault("Content-Security-Policy", CSP)
     if request.is_secure:                                       # public https site: https only
         h.setdefault("Strict-Transport-Security", "max-age=15552000")
     path = request.path

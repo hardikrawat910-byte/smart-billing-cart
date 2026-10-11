@@ -435,3 +435,8 @@ dialog.modal::backdrop { background: oklch(0 0 0 / .4); }
   .app { padding: 0; }
   .card { box-shadow: none; }
 }
+
+/* Cart scale switched off (SCALE_ENABLED): hide everything about weights and camera colours */
+.no-scale .scale-only { display: none !important; }
+body:not(.no-scale) .scale-off-only { display: none !important; }
+.no-scale .tabs.five { grid-template-columns: repeat(4, auto); }

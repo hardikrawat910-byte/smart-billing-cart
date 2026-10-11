@@ -611,7 +611,7 @@ largeText();
 
 /* Call staff: a button on the shopper's Scan, Cart and List pages. Staff answer from theirs. */
 const HELP_REASONS = [
-  ['wont_scan', "An item won't scan"], ['weight', 'The cart says the weight is wrong'],
+  ['wont_scan', "An item won't scan"], ['weight', 'The cart or exit gate is not working'],
   ['find', "I can't find an item"], ['payment', 'Wallet or payment'], ['other', 'Something else'],
 ];
 const Help = {

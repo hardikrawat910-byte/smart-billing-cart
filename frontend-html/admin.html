@@ -4,16 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Admin - SmartCart</title>
-  <meta name="description" content="SmartCart - scan items, verify them by weight and camera, pay from your wallet and skip the billing queue.">
+  <meta name="description" content="SmartCart - scan items with your phone, pay from your wallet, and leave through a camera-checked exit. No billing queue.">
   <meta name="theme-color" content="#efdc86">
-  <link rel="icon" href="favicon.svg?v=2.8.5" type="image/svg+xml">
+  <link rel="icon" href="favicon.svg?v=2.9.0" type="image/svg+xml">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="SmartCart">
-  <link rel="stylesheet" href="css/style.css?v=2.8.5">
+  <link rel="stylesheet" href="css/style.css?v=2.9.0">
 </head>
-<body>
+<body class="no-scale">
   <div class="app">
     <header class="page-head">
       <div>
@@ -26,7 +26,7 @@
       <div class="tabs five" role="tablist">
         <button type="button" class="tab active" data-tab="dashboard">Today</button>
         <button type="button" class="tab" data-tab="products">Products</button>
-        <button type="button" class="tab" data-tab="flags">Flags <span id="flag-count"></span></button>
+        <button type="button" class="tab scale-only" data-tab="flags">Flags <span id="flag-count"></span></button>
         <button type="button" class="tab" data-tab="orders">Orders</button>
         <button type="button" class="tab" data-tab="hardware">Hardware</button>
       </div>
@@ -68,6 +68,7 @@
         <details class="more-field"><summary class="xs muted">Use a web image link instead</summary>
           <div class="field" style="margin-top:8px"><label class="label" for="f-image">Image URL</label><input class="input" id="f-image" name="image_url" maxlength="500" placeholder="https://..."><p class="field-error" data-for="image_url"></p></div></details>
         <div class="field"><label class="label" for="f-desc">Description</label><textarea class="input" id="f-desc" name="description" maxlength="2000"></textarea></div>
+        <div class="scale-only">
         <p class="small" style="font-weight:700;margin:4px 0 10px">Verification references</p>
         <div class="form-grid">
           <div class="field"><label class="label" for="f-wmin">Min weight (g)</label><input class="input" id="f-wmin" name="weight_min_g" type="number" min="0" step="0.1"><p class="field-error" data-for="weight_min_g"></p></div>
@@ -77,6 +78,7 @@
           <div class="row"><input type="color" id="f-color-picker" value="#888888" style="width:44px;height:44px;border:none;background:none;padding:0"><input class="input" id="f-color" name="ref_color" placeholder="#a1b2c3 (blank if unknown)"></div>
           <p class="field-error" data-for="ref_color"></p></div>
         <p class="xs muted" style="margin-bottom:14px">Tip: save the product, place it alone on the scale and under the camera, then press <b>Calibrate</b> to fill these from real readings.</p>
+        </div>
         <div class="row"><button type="button" class="btn btn-outline" id="form-cancel" style="flex:1">Cancel</button><button type="submit" class="btn" id="form-save" style="flex:1">Save</button></div>
       </form>
     </div></dialog>
@@ -87,8 +89,8 @@
       <div class="row"><button type="button" class="btn btn-outline" id="qr-close" style="flex:1">Close</button><button type="button" class="btn" id="qr-download" style="flex:1">Download PNG</button></div>
     </div></dialog>
   </div>
-  <script src="js/api.js?v=2.8.5"></script>
-  <script src="js/ui.js?v=2.8.5"></script>
-  <script src="js/admin.js?v=2.8.5"></script>
+  <script src="js/api.js?v=2.9.0"></script>
+  <script src="js/ui.js?v=2.9.0"></script>
+  <script src="js/admin.js?v=2.9.0"></script>
 </body>
 </html>

@@ -1,4 +1,5 @@
 """Endpoints the Raspberry Pi calls, plus live status, not-scanned alerts and a simulator for demos."""
+import hmac
 import math
 import os
 import secrets
@@ -11,7 +12,7 @@ from config import APP_VERSION
 from extensions import db
 from models import HardwareReading, utcnow
 from services import (HEX_RE, admin_required, device_id_from_request, device_required,
-                      dominant_color, error, hardware_mode, json_body, latest_any, login_required)
+                      dominant_color, error, hardware_mode, json_body, latest_any, login_required, image_signature)
 
 bp = Blueprint("hardware", __name__, url_prefix="/api/hardware")
 
@@ -111,6 +112,8 @@ def reading_check(reading_id):
 
 @bp.get("/images/<path:filename>")
 def image_file(filename):
+    if not hmac.compare_digest(str(request.args.get("sig") or ""), image_signature(filename)):
+        return error("Photo not found", 404)
     return send_from_directory(current_app.config["UPLOAD_DIR"], filename)
 
 
@@ -118,6 +121,8 @@ def image_file(filename):
 @admin_required
 def simulate(user):
     """Admin-only fake readings, so the fraud flow can be demoed without hardware."""
+    if not current_app.config["SCALE_ENABLED"]:
+        return error("The cart scale is switched off on this server (SCALE_ENABLED).", 409)
     data = json_body()
     created = []
     if str(data.get("weight_g") or "").strip():

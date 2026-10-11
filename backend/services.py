@@ -32,6 +32,18 @@ def _bill_signature(order):
     return hmac.new(key, message, hashlib.sha256).hexdigest()[:16]
 
 
+def image_signature(filename):
+    """Cart camera photos are served only with this signature in the link, which the server hands
+    out to logged-in pages - a photo can't be opened by guessing its file name."""
+    import hashlib
+    key = current_app.config["JWT_SECRET_KEY"].encode()
+    return hmac.new(key, f"smartcart-photo:{filename}".encode(), hashlib.sha256).hexdigest()[:20]
+
+
+def image_url(filename):
+    return f"/api/hardware/images/{filename}?sig={image_signature(filename)}" if filename else None
+
+
 def bill_code(order):
     """Text inside the bill QR, e.g. SCBILL-12-3fa9c01b77d2e845."""
     return f"SCBILL-{order.id}-{_bill_signature(order)}"
@@ -129,6 +141,8 @@ def to_int(value, default=None):
 def hardware_mode():
     """off | weight | full. The admin's choice on the website wins over HARDWARE_MODE in .env."""
     from cache import settings
+    if not current_app.config.get("SCALE_ENABLED"):
+        return "off"                      # no scale fitted: nothing to check weights or colours with
     mode = settings.get("hardware_mode") or current_app.config.get("HARDWARE_MODE", "off")
     return mode if mode in MODES else "off"
 

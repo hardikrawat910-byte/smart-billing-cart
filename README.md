@@ -22,12 +22,13 @@ Built as a side project.
 flowchart LR
     P["Shopper's phone<br/>(website / installable app)"] -- "scan, cart, pay" --> S["SmartCart server<br/>Flask + MySQL"]
     S -- "cart, bill, exit pass QR" --> P
-    Pi["Raspberry Pi 4 on the cart<br/>load cell + HX711, Pi camera,<br/>LEDs, buzzer"] -- "weight, photo, exit scans<br/>(HTTPS, device key)" --> S
+    Pi["Raspberry Pi 4 on the cart<br/>Pi camera, LEDs, buzzer<br/>(load cell: switched off)"] -- "exit scans, wallet tokens<br/>(HTTPS, device key)" --> S
     St["Staff phone or laptop<br/>wallet counter, exit gate, admin"] --> S
 ```
 
 1. **Scan.** The shopper scans the barcode on a pack, or the SmartCart QR label, with their phone.
-2. **Verify.** The Pi sends the weight of what was just placed in the cart and a photo of it. An item enters the cart only if the **barcode, the weight and the camera colour** all agree. A mismatch, such as scanning an expensive item but putting in a cheap one, is flagged for staff.
+2. **Add to cart.** A known, published barcode adds the item; unknown codes are refused.
+   *Built but switched off:* a load cell weighs each item and the Pi camera checks its colour, so an item enters the cart only if the barcode, the weight and the colour agree. Our HX711 board failed, so the server runs with `SCALE_ENABLED` off and the website hides this part. A working scale and `SCALE_ENABLED=1` bring it back.
 3. **Pay.** The bill is paid from the shopper's **SmartCart Wallet**. They top it up at the counter by cash or UPI using a one-time payment token.
 4. **Exit.** The paid bill carries a signed, one-time **exit pass** QR. The shopper holds it under the Pi camera: green light and one beep means OK, red light and beeps means stop.
 
@@ -44,10 +45,14 @@ The Pi never accepts incoming connections. It only calls out to the server over 
 - Share or print the bill as a PDF; installs as an app on Android and iPhone
 
 **Against theft and mistakes**
-- Verification modes: barcode only, barcode + weight, or barcode + weight + camera colour
-- Each weight reading can verify only one scan, so one weighing can't cover two items
-- An item put in the cart **without scanning** triggers a red banner on the phone and a blink and beep on the cart
 - Exit passes are HMAC-signed and work once: screenshots, edited QR codes and reused bills are refused
+- Top-up tokens are signed too, and money is added only when staff confirm the cash or UPI payment
+- With the scale on (`SCALE_ENABLED=1`): barcode + weight + camera-colour checks, one weighing per scan, and an alert when an item goes in without a scan
+
+**Security**
+- Rate limits on the API, a Content-Security-Policy on every page, hashed passwords, signed photo links
+- No secrets in the code: keys and the admin password come from the server's settings
+- Exact dependency versions; forgot-password handled by staff with a one-time password
 
 **For staff**
 - **Wallet counter:** scan a token, take cash or UPI, confirm. A token held under the Pi camera opens there by itself
@@ -59,7 +64,6 @@ The Pi never accepts incoming connections. It only calls out to the server over 
   <img src="docs/screenshots/02b_list.png" width="200" alt="Shopping list with store map">
   <img src="docs/screenshots/05_wallet_token_upi.png" width="200" alt="Wallet top-up token with UPI button">
   <img src="docs/screenshots/06_counter_upi.png" width="200" alt="Staff wallet counter confirming a payment">
-  <img src="docs/screenshots/10_unscanned_alert.png" width="200" alt="Alert for an item put in without scanning">
 </p>
 <p align="center">
   <img src="docs/screenshots/07_exit_ok.png" width="200" alt="Exit gate: bill verified">
@@ -71,8 +75,8 @@ The Pi never accepts incoming connections. It only calls out to the server over 
 | Part | Job |
 |---|---|
 | Raspberry Pi 4 | Runs the cart program `pi/cart_agent.py` |
-| Pi Camera v2 | Colour check of each item, reads exit passes and wallet tokens |
-| Load cell + HX711 amplifier | Weighs each item as it goes into the cart |
+| Pi Camera v2 | Reads exit passes and wallet tokens (and checks item colour when the scale is on) |
+| Load cell + HX711 amplifier | Weighs each item (built; switched off until a working board is fitted) |
 | Green LED, red LED (220 Ω each), buzzer | OK / problem signals |
 
 <p align="center">
@@ -94,7 +98,7 @@ The Pi never accepts incoming connections. It only calls out to the server over 
 | Buzzer + | 15 (GPIO 22) |
 | LEDs and buzzer − | 14 (GND) |
 
-Without the hardware, the website still runs: an admin-only simulator sends weights and colours, so the whole flow can be demonstrated on a laptop.
+Without the hardware, the website still runs. With `SCALE_ENABLED=1`, an admin-only simulator sends weights and colours, so the weight checks can be demonstrated on a laptop.
 
 ## Tech stack
 

@@ -197,6 +197,8 @@ def delete_product(user, product_id):
 def calibrate(user, product_id):
     """Put ONLY this item on the scale / under the camera, then call this to store
     its real weight range and reference colour."""
+    if not current_app.config["SCALE_ENABLED"]:
+        return error("The cart scale is switched off on this server (SCALE_ENABLED).", 409)
     product = get_active(product_id)
     if product is None:
         return error("Product not found", 404)
@@ -278,6 +280,8 @@ def update_settings(user):
     mode = str(json_body().get("hardware_mode") or "").strip().lower()
     if mode not in MODES:
         return error("hardware_mode must be off, weight or full", 422)
+    if mode != "off" and not current_app.config["SCALE_ENABLED"]:
+        return error("The cart scale is switched off on this server (SCALE_ENABLED), so only 'off' is possible.", 409)
     cache.settings.set("hardware_mode", mode)
     return jsonify(hardware_mode=hardware_mode(), source=hardware_mode_source())
 
@@ -288,6 +292,7 @@ def system(user):
     cfg = current_app.config
     return jsonify(
         version=APP_VERSION,
+        scale_enabled=bool(cfg["SCALE_ENABLED"]),
         hardware_mode=hardware_mode(),
         hardware_mode_source=hardware_mode_source(),
         cache=cache.products.stats(),

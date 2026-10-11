@@ -5,7 +5,7 @@ from urllib.parse import quote_plus
 
 from dotenv import load_dotenv
 
-APP_VERSION = "2.8.5"
+APP_VERSION = "2.9.0"
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
@@ -88,6 +88,10 @@ class Config:
 
     DEVICE_KEY = _secret("DEVICE_KEY", ".device_key", 8)   # if made up: see backend/.device_key
     HARDWARE_MODE = _env("HARDWARE_MODE", "off").lower()     # off | weight | full
+    # The cart's scale (load cell + HX711). Off: no weight or camera-colour checks, the verification
+    # mode stays "off" and the website hides everything about the scale. The Pi camera still runs the
+    # exit gate and reads wallet tokens. Set SCALE_ENABLED=1 when a working scale is fitted.
+    SCALE_ENABLED = _env("SCALE_ENABLED", "0").lower() in ("1", "yes", "true", "on")
     WEIGHT_TOLERANCE_PCT = float(_env("WEIGHT_TOLERANCE_PCT", "5"))
     MIN_ITEM_WEIGHT_G = float(_env("MIN_ITEM_WEIGHT_G", "2"))
     READING_MAX_AGE_SEC = int(_env("READING_MAX_AGE_SEC", "15"))
@@ -102,6 +106,9 @@ class Config:
     ADMIN_GOOGLE_EMAILS = {e.strip().lower() for e in _env("ADMIN_GOOGLE_EMAILS").split(",") if e.strip()}
 
     # Security: wrong passwords allowed per email (and per IP) before a 15-minute lock.
+    # API flood protection (see security.RateLimiter). RATE_LIMIT=0 switches it off (tests).
+    RATE_LIMIT_ENABLED = _env("RATE_LIMIT", "1") != "0"
+    REGISTER_PER_HOUR = int(_env("REGISTER_PER_HOUR", "20"))
     LOGIN_MAX_FAILURES = int(_env("LOGIN_MAX_FAILURES", "5"))
     LOGIN_LOCK_MINUTES = int(_env("LOGIN_LOCK_MINUTES", "15"))
 

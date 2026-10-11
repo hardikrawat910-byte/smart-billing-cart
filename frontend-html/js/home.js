@@ -140,7 +140,7 @@ async function load() {
     document.getElementById('featured').hidden = true;
     document.getElementById('chips').innerHTML = '';
     sectionsEl.innerHTML = `<div class="card small muted">${esc(err.message)}
-      <button type="button" class="btn btn-secondary btn-sm" style="margin-top:10px" onclick="location.reload()">Try again</button></div>`;
+      <a class="btn btn-secondary btn-sm" style="margin-top:10px" href="">Try again</a></div>`;
   }
 }
 
