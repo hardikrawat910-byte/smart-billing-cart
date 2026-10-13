@@ -376,4 +376,12 @@ With `python app.py` running: `cloudflared tunnel --url http://localhost:5000` a
 - `privacy.html` and `terms.html` explain what is stored and how the wallet works (linked from login and profile).
 
 ## Team
-Shivraj Morde, Hardik Rawat and Ismail Mohammed.
+
+| Member | Role |
+|---|---|
+| **Hardik Rawat** | Project lead. Created the first design in Figma and the Lovable prototype the project grew from. |
+| Ismail Mohammed | Helped build the backend (server and database). |
+| Shivraj Morde | Set up the Raspberry Pi and connected its camera to the website. |
+| Pranav Anand | Team member (moral support). |
+
+The same list is on the website's About & team page (`team.html`).

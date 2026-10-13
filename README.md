@@ -146,9 +146,14 @@ SmartCart began as a Figma design in July 2026, then an AI-generated shopping-ap
 
 ## Team
 
-- Shivraj Morde
-- Hardik Rawat
-- Ismail Mohammed
+| Member | Role |
+|---|---|
+| **Hardik Rawat** | Project lead. Created the first design in Figma and the Lovable prototype the project grew from. |
+| Ismail Mohammed | Helped build the backend (server and database). |
+| Shivraj Morde | Set up the Raspberry Pi and connected its camera to the website. |
+| Pranav Anand | Team member (moral support). |
+
+The same list is on the website's About & team page (`team.html`).
 
 ## Licence
 
