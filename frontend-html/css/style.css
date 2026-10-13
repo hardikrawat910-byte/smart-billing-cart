@@ -440,3 +440,4 @@ dialog.modal::backdrop { background: oklch(0 0 0 / .4); }
 .no-scale .scale-only { display: none !important; }
 body:not(.no-scale) .scale-off-only { display: none !important; }
 .no-scale .tabs.five { grid-template-columns: repeat(4, auto); }
+.legal ul.team li { margin-bottom: 6px; }

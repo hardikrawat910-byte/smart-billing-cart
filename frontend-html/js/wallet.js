@@ -59,7 +59,7 @@ function render(first) {
     <div class="card" style="padding:4px 16px">${data.transactions.length
       ? data.transactions.map(txnRow).join('')
       : '<p class="small muted center" style="padding:14px 0">No wallet activity yet.</p>'}</div>
-    <p class="legal-links"><a href="terms.html">Terms</a> &middot; <a href="privacy.html">Privacy</a></p>`;
+    <p class="legal-links"><a href="team.html">About &amp; team</a> &middot; <a href="terms.html">Terms</a> &middot; <a href="privacy.html">Privacy</a></p>`;
 
   main.querySelectorAll('.amount-chips .chip').forEach((b) => {
     b.onclick = () => { document.getElementById('topup-amount').value = b.dataset.amount; };
