@@ -144,6 +144,21 @@ SmartCart began as a Figma design in July 2026, then an AI-generated shopping-ap
 </p>
 <p align="center"><sub>Left: the Lovable prototype (August). Right: SmartCart v2.8.5 (October).</sub></p>
 
+## Documents
+
+Project documents are in [`docs/project/`](docs/project/):
+
+| File | What it is |
+|---|---|
+| `SmartCart_IEEE_Paper.pdf` / `.docx` | Conference paper in IEEE two-column format, with measured results |
+| `SmartCart_MiniProject_Report.docx` | Mini project report (SIES format), with a survey of five IEEE papers |
+| `SmartCart_SkillLab_Python.pptx` | Skill Lab presentation: SmartCart as a Python project |
+| `SmartCart_Presentation.pptx` | Presentation following the report's chapters |
+| `SmartCart_MiniProject_PPT_SIES_format.pptx` | Presentation in the SIES mini project template |
+| `SmartCart_MiniProject_Logbook.docx` | Mini project logbook (front pages filled) |
+
+The server tests behind the paper's numbers are in [`tests/benchmark/`](tests/benchmark/).
+
 ## Team
 
 | Member | Role |
