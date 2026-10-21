@@ -151,7 +151,7 @@ Project documents are in [`docs/project/`](docs/project/):
 | File | What it is |
 |---|---|
 | `SmartCart_IEEE_Paper.pdf` / `.docx` | Conference paper in IEEE two-column format, with measured results |
-| `SmartCart_MiniProject_Report.docx` | Mini project report (SIES format), with a survey of five IEEE papers |
+| `CartLess_Checkout_MiniProject_Report.docx` | Mini project report (SIES format), titled "CartLess Checkout: Self-Billing Using Your Own Phone", with a survey of five IEEE papers |
 | `SmartCart_SkillLab_Python.pptx` | Skill Lab presentation: SmartCart as a Python project |
 | `SmartCart_Presentation.pptx` | Presentation following the report's chapters |
 | `SmartCart_MiniProject_PPT_SIES_format.pptx` | Presentation in the SIES mini project template |
