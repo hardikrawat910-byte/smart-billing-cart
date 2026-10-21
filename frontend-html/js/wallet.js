@@ -1,4 +1,4 @@
-// SmartCart Wallet: balance, top-up tokens (paid at the counter), history.
+// CartLess Wallet: balance, top-up tokens (paid at the counter), history.
 renderNav('wallet');
 const main = document.getElementById('main');
 let data = null;
@@ -37,7 +37,7 @@ function render(first) {
   const need = Number(param('need')) || 0;
   main.innerHTML = `
     <div class="card balance-card">
-      <p class="kicker">SmartCart Wallet</p>
+      <p class="kicker">CartLess Wallet</p>
       <p class="amount" id="balance">${money(data.balance)}</p>
       <p class="xs" style="opacity:.85">Pay at the counter by cash or UPI to add money. Checkout takes the bill from here.</p>
     </div>
@@ -93,7 +93,7 @@ function renderPending() {
       <div class="qr-box" id="qr-${p.id}"></div>
       <p style="font-size:1.25rem;font-weight:800">${money(p.amount)}</p>
       <p class="small muted" style="max-width:300px">Show this at the counter and pay ${money(p.amount)} by cash or UPI. Staff scan it and your balance updates here by itself.</p>
-      ${data.upi ? `<a class="btn btn-secondary upi-btn" href="${esc(upiLink(data.upi, p.amount, `SmartCart ${p.number}`))}">${icon('phone', 16)} Pay ${money(p.amount).replace('.00', '')} with a UPI app</a>
+      ${data.upi ? `<a class="btn btn-secondary upi-btn" href="${esc(upiLink(data.upi, p.amount, `CartLess Checkout ${p.number}`))}">${icon('phone', 16)} Pay ${money(p.amount).replace('.00', '')} with a UPI app</a>
         <p class="xs muted" style="max-width:300px">Pays <span class="mono">${esc(data.upi.id)}</span> with the amount filled in. Then show the token: staff check the payment and press "UPI received".</p>` : ''}
       <button type="button" class="btn btn-ghost btn-sm" data-cancel="${p.id}">Cancel this token</button>
     </section>`).join('');

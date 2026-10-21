@@ -19,7 +19,7 @@ import config
 # Prices are approximate Indian MRPs and weights are estimates of the whole pack - put the
 # real item on the cart's scale and press Admin > Products > Calibrate to store its true
 # weight and colour. Codes: the pack's barcode where known (Haldiram's Bhujia Sev), otherwise
-# a SmartCart code - print its QR label, or press Edit > Scan to swap in the pack's barcode.
+# a CartLess Checkout code - print its QR label, or press Edit > Scan to swap in the pack's barcode.
 # ---------------------------------------------------------------------------------------
 SECTIONS = ["Stationery", "Snacks", "Biscuits & Chocolates", "Beverages", "Instant Food",
             "Personal Care", "Household", "Electronics & Hobby"]
@@ -283,7 +283,7 @@ def main():
             password = secrets.token_urlsafe(9)
         admin = User.query.filter_by(email=email).first()
         if admin is None:
-            db.session.add(User(full_name="SmartCart Admin", email=email, role="admin",
+            db.session.add(User(full_name="CartLess Admin", email=email, role="admin",
                                 password_hash=generate_password_hash(password)))
             shown = f"{password}   <- made up now, write it down (or set ADMIN_PASSWORD)" if made_up \
                 else "(the ADMIN_PASSWORD you set)"

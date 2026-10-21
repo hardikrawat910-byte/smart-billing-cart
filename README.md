@@ -1,8 +1,10 @@
-# SmartCart: Smart Billing Cart
+# CartLess Checkout: Self-Billing Using Your Own Phone
+
+*Formerly called SmartCart / Smart Billing Cart. The live demo address still uses the old name.*
 
 **Scan as you shop, pay from your phone, walk out. No billing queue.**
 
-SmartCart is a self-checkout cart for a neighbourhood general store. Shoppers scan items with their phone. A Raspberry Pi on the cart weighs and photographs each item to check it matches the scan. The shopper pays from a SmartCart Wallet, and the Pi camera checks the bill QR at the exit.
+CartLess Checkout is a self-checkout cart for a neighbourhood general store. Shoppers scan items with their phone. A Raspberry Pi on the cart weighs and photographs each item to check it matches the scan. The shopper pays from a CartLess Wallet, and the Pi camera checks the bill QR at the exit.
 
 **Live demo:** https://smartcart-gkrx.onrender.com
 (free hosting: the first visit after a quiet spell can take about 30 seconds to wake up)
@@ -20,16 +22,16 @@ Built as a side project.
 
 ```mermaid
 flowchart LR
-    P["Shopper's phone<br/>(website / installable app)"] -- "scan, cart, pay" --> S["SmartCart server<br/>Flask + MySQL"]
+    P["Shopper's phone<br/>(website / installable app)"] -- "scan, cart, pay" --> S["CartLess Checkout server<br/>Flask + MySQL"]
     S -- "cart, bill, exit pass QR" --> P
     Pi["Raspberry Pi 4 on the cart<br/>Pi camera, LEDs, buzzer<br/>(load cell: switched off)"] -- "exit scans, wallet tokens<br/>(HTTPS, device key)" --> S
     St["Staff phone or laptop<br/>wallet counter, exit gate, admin"] --> S
 ```
 
-1. **Scan.** The shopper scans the barcode on a pack, or the SmartCart QR label, with their phone.
+1. **Scan.** The shopper scans the barcode on a pack, or the CartLess QR label, with their phone.
 2. **Add to cart.** A known, published barcode adds the item; unknown codes are refused.
    *Built but switched off:* a load cell weighs each item and the Pi camera checks its colour, so an item enters the cart only if the barcode, the weight and the colour agree. Our HX711 board failed, so the server runs with `SCALE_ENABLED` off and the website hides this part. A working scale and `SCALE_ENABLED=1` bring it back.
-3. **Pay.** The bill is paid from the shopper's **SmartCart Wallet**. They top it up at the counter by cash or UPI using a one-time payment token.
+3. **Pay.** The bill is paid from the shopper's **CartLess Wallet**. They top it up at the counter by cash or UPI using a one-time payment token.
 4. **Exit.** The paid bill carries a signed, one-time **exit pass** QR. The shopper holds it under the Pi camera: green light and one beep means OK, red light and beeps means stop.
 
 The Pi never accepts incoming connections. It only calls out to the server over HTTPS with its device key.
@@ -37,7 +39,7 @@ The Pi never accepts incoming connections. It only calls out to the server over 
 ## Features
 
 **For shoppers**
-- One scanner for printed barcodes (EAN-13/8, UPC-A/E, Code 128/39) and SmartCart QR labels
+- One scanner for printed barcodes (EAN-13/8, UPC-A/E, Code 128/39) and CartLess QR labels
 - Running total, offers with MRP and "You saved", and a spending budget with warnings
 - Shopping list with a store map that lights up the aisles still to visit; items tick off as they are scanned
 - Wallet top-up tokens with a "Pay with a UPI app" button (amount filled in)
@@ -113,7 +115,7 @@ Without the hardware, the website still runs. With `SCALE_ENABLED=1`, an admin-o
 Quick start on a PC with Python 3.10+ and MySQL 8:
 
 ```
-cd smart-billing-cart/backend
+cd cartless-checkout/backend
 copy .env.example .env        (Mac/Linux: cp .env.example .env), then set DB_PASSWORD (and ADMIN_PASSWORD)
 python -m venv venv
 venv\Scripts\activate         (Mac/Linux: source venv/bin/activate)
@@ -136,13 +138,13 @@ SETUP.md         Full setup and technical guide
 
 ## From prototype to product
 
-SmartCart began as a Figma design in July 2026, then an AI-generated shopping-app prototype on Lovable in August (6 electronics parts, no hardware, no checks), moved to our own Flask + ESP32 design in September, switched to a Raspberry Pi in October and reached v2.8.5 with a wallet, an exit gate and barcode + weight + camera verification. The full story, with a side-by-side comparison: **[JOURNEY.md](JOURNEY.md)**.
+CartLess Checkout began as a Figma design in July 2026, then an AI-generated shopping-app prototype on Lovable in August (6 electronics parts, no hardware, no checks), moved to our own Flask + ESP32 design in September, switched to a Raspberry Pi in October and reached v2.8.5 with a wallet, an exit gate and barcode + weight + camera verification. The full story, with a side-by-side comparison: **[JOURNEY.md](JOURNEY.md)**.
 
 <p align="center">
   <img src="docs/journey/lovable-prototype-home.png" width="200" alt="The August Lovable prototype">
-  <img src="docs/screenshots/01_home.png" width="200" alt="SmartCart v2.8.5 home page">
+  <img src="docs/screenshots/01_home.png" width="200" alt="CartLess Checkout v2.8.5 home page">
 </p>
-<p align="center"><sub>Left: the Lovable prototype (August). Right: SmartCart v2.8.5 (October).</sub></p>
+<p align="center"><sub>Left: the Lovable prototype (August). Right: CartLess Checkout v2.8.5 (October).</sub></p>
 
 ## Documents
 
@@ -150,12 +152,12 @@ Project documents are in [`docs/project/`](docs/project/):
 
 | File | What it is |
 |---|---|
-| `SmartCart_IEEE_Paper.pdf` / `.docx` | Conference paper in IEEE two-column format, with measured results |
+| `CartLess_Checkout_IEEE_Paper.pdf` / `.docx` | Conference paper in IEEE two-column format, with measured results |
 | `CartLess_Checkout_MiniProject_Report.docx` | Mini project report (SIES format), titled "CartLess Checkout: Self-Billing Using Your Own Phone", with a survey of five IEEE papers |
-| `SmartCart_SkillLab_Python.pptx` | Skill Lab presentation: SmartCart as a Python project |
-| `SmartCart_Presentation.pptx` | Presentation following the report's chapters |
-| `SmartCart_MiniProject_PPT_SIES_format.pptx` | Presentation in the SIES mini project template |
-| `SmartCart_MiniProject_Logbook.docx` | Mini project logbook (front pages filled) |
+| `CartLess_Checkout_SkillLab_Python.pptx` | Skill Lab presentation: CartLess Checkout as a Python project |
+| `CartLess_Checkout_Presentation.pptx` | Presentation following the report's chapters |
+| `CartLess_Checkout_MiniProject_PPT_SIES_format.pptx` | Presentation in the SIES mini project template |
+| `CartLess_Checkout_MiniProject_Logbook.docx` | Mini project logbook (front pages filled) |
 
 The server tests behind the paper's numbers are in [`tests/benchmark/`](tests/benchmark/).
 

@@ -10,7 +10,7 @@ async function load() {
     ${Skel.block(44, 'margin-top:16px')}`);
   try {
     const [{ product: p }, health] = await Promise.all([api(`/api/products/${encodeURIComponent(id)}`), api('/api/health')]);
-    document.title = `${p.name} - SmartCart`;
+    document.title = `${p.name} - CartLess Checkout`;
     document.getElementById('title').textContent = p.category;
     const scanOnly = health.hardware_mode !== 'off';
     main.innerHTML = `
@@ -22,7 +22,7 @@ async function load() {
         </div>
         <h2 style="font-size:1.25rem;font-weight:700;margin:8px 0 6px">${esc(p.name)}</h2>
         <p>${priceHtml(p, true)}</p>
-        ${p.mrp ? '<p class="xs muted" style="margin-top:4px">Offer price at SmartCart; MRP shown on the pack.</p>' : ''}
+        ${p.mrp ? '<p class="xs muted" style="margin-top:4px">Offer price at CartLess Checkout; MRP shown on the pack.</p>' : ''}
         <p class="small muted" style="margin-top:10px;line-height:1.6">${esc(p.description || '')}</p>
         <hr class="divider">
         <p class="xs muted">Code on the shelf label: <span class="mono">${esc(p.qr_code)}</span></p>

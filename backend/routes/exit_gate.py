@@ -54,7 +54,7 @@ def check_bill(code, staff=None, device_id=None, bag_weight_g=None):
 
     order_id, signature = parse_bill_code(code)
     if order_id is None:
-        return result("invalid", "This is not a SmartCart bill QR.", 422)
+        return result("invalid", "This is not a CartLess Checkout bill QR.", 422)
     order = db.session.get(Order, order_id)
     if order is None or not bill_signature_ok(order, signature):
         return result("invalid", "Bill not recognised - it may be fake or edited. Do not let the customer leave.", 404)

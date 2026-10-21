@@ -1,4 +1,4 @@
--- SmartCart / Smart Billing Cart - MySQL 8.0.16+ schema.
+-- CartLess Checkout - MySQL 8.0.16+ schema.
 -- seed.py creates exactly this automatically; this file documents it for your report
 -- and lets you create it by hand in MySQL Workbench if you prefer.
 
@@ -13,7 +13,7 @@ CREATE TABLE users (
   google_sub     VARCHAR(64) NULL UNIQUE,    -- Google account id (Google sign-in)
   organization   VARCHAR(120) NULL,
   role           ENUM('user','admin') NOT NULL DEFAULT 'user',
-  wallet_balance DECIMAL(10,2) NOT NULL DEFAULT 0,  -- SmartCart Wallet (INR)
+  wallet_balance DECIMAL(10,2) NOT NULL DEFAULT 0,  -- CartLess Wallet (INR)
     shopping_budget DECIMAL(10, 2) NULL,               -- optional spending limit
   created_at     DATETIME NOT NULL,
   updated_at     DATETIME NOT NULL

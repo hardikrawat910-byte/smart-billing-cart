@@ -62,7 +62,7 @@ function render() {
       <hr class="divider">
       <div class="row between small" style="margin-top:8px"><span class="muted">${icon('wallet', 14)} Wallet balance</span><span class="tabular" style="font-weight:600">${money(cart.wallet_balance)}</span></div>
       <hr class="divider">
-      <p class="xs muted">${scanOnly ? `Every item was verified by barcode + weight${cart.hardware_mode === 'full' ? ' + camera' : ''}. ` : ''}You pay from your SmartCart Wallet. The total is recalculated on the server from current prices when you pay.</p>
+      <p class="xs muted">${scanOnly ? `Every item was verified by barcode + weight${cart.hardware_mode === 'full' ? ' + camera' : ''}. ` : ''}You pay from your CartLess Wallet. The total is recalculated on the server from current prices when you pay.</p>
     </div>
     ${budgetCard()}
     <div style="height:84px"></div>`;

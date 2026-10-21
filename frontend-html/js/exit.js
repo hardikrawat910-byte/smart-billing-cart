@@ -152,7 +152,7 @@ function piCameraNote() {
   document.getElementById('scanner-box').hidden = true;
   document.getElementById('scan-label').hidden = true;
   const status = document.getElementById('cam-status');
-  status.innerHTML = `This is the Raspberry Pi: its camera is in use by the SmartCart Pi program, and the bills it
+  status.innerHTML = `This is the Raspberry Pi: its camera is in use by the CartLess Checkout Pi program, and the bills it
     reads show up here by themselves. Or type the bill code below.
     <button type="button" class="btn-link small" id="cam-here">Use the camera in this browser instead (stop the Pi program first)</button>`;
   document.getElementById('cam-here').onclick = startCamera;

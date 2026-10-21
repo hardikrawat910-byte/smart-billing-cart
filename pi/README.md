@@ -1,4 +1,4 @@
-# SmartCart - Raspberry Pi program
+# CartLess Checkout - Raspberry Pi program
 
 One Raspberry Pi 4 + Pi Camera v2 + HX711/load cell + 2 LEDs + buzzer does two jobs:
 
@@ -12,7 +12,7 @@ One Raspberry Pi 4 + Pi Camera v2 + HX711/load cell + 2 LEDs + buzzer does two j
 | green + 1 beep | bill OK - customer may leave |
 | green double blink + beep | wallet top-up token read - it opens on the Wallet counter page for staff to confirm |
 | red + 2 beeps | bill already used |
-| red + long beep | not a SmartCart bill / edited bill |
+| red + long beep | not a CartLess Checkout bill / edited bill |
 | red flashing + 3 beeps | hold: bag weight doesn't match the bill, or flagged items |
 | red double blink + 2 beeps | cart: an item went in but was never scanned (repeats up to 3 times, every 15 s) |
 | green x3 + short beep | program started and connected (after power-on) |

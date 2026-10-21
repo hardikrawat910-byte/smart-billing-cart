@@ -1,6 +1,6 @@
 # Server benchmark
 
-`bench.py` drives the real SmartCart server through Flask's test client (local MySQL 8, seed data,
+`bench.py` drives the real CartLess Checkout server through Flask's test client (local MySQL 8, seed data,
 rate limiting off) and records what the IEEE paper and the presentations report:
 
 | Test | Result (`results.json`) |

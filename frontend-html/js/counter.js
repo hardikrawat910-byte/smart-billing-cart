@@ -42,7 +42,7 @@ async function lookup(code, { fromPi = false } = {}) {
       : (scanned ? '' : '<p class="xs muted" style="margin-bottom:6px">Typed number: check the name with the customer before taking money.</p>');
     document.getElementById('result').innerHTML = note + tokenCard(topup, { big: true });
     const qr = document.getElementById('upi-qr');
-    if (qr) drawQr(qr, upiLink(upi, topup.amount, `SmartCart ${topup.number}`), 168).then((ok) => { if (!ok) qr.remove(); });
+    if (qr) drawQr(qr, upiLink(upi, topup.amount, `CartLess Checkout ${topup.number}`), 168).then((ok) => { if (!ok) qr.remove(); });
     document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
   } catch (err) {
     document.getElementById('result').innerHTML = `<div class="card exit-result is-bad"><p class="big">NOT A VALID TOKEN</p><p class="small">${esc(err.message)}</p></div>`;
@@ -142,7 +142,7 @@ function showPi(pi) {
   let msg;
   let ok = false;
   if (!pi || !pi.online) {
-    msg = 'Not connected: the SmartCart Pi program is not running. Scan the token with the camera below, or type its number.';
+    msg = 'Not connected: the CartLess Checkout Pi program is not running. Scan the token with the camera below, or type its number.';
   } else if (!pi.reads_codes) {
     msg = `Online (${pi.device_id}), but its camera reader is off: check camera and qr in cart_agent.ini. Scan below or type the number.`;
   } else if (!pi.reads_tokens) {
@@ -247,7 +247,7 @@ function init() {
 function piCameraNote() {
   document.getElementById('scanner-box').hidden = true;
   const status = document.getElementById('cam-status');
-  status.innerHTML = `This is the Raspberry Pi: its camera is in use by the SmartCart Pi program, so hold the token under it
+  status.innerHTML = `This is the Raspberry Pi: its camera is in use by the CartLess Checkout Pi program, so hold the token under it
     and it opens here by itself. Or type the token number below.
     <button type="button" class="btn-link small" id="cam-here">Use the camera in this browser instead (stop the Pi program first)</button>`;
   document.getElementById('cam-here').onclick = startCamera;

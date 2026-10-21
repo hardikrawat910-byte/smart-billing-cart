@@ -22,7 +22,7 @@ def order_payload(order):
 @bp.post("/checkout")
 @login_required
 def checkout(user):
-    """Atomic checkout, paid from the SmartCart Wallet: prices come from the DB (never the
+    """Atomic checkout, paid from the CartLess Wallet: prices come from the DB (never the
     browser), stock and the wallet are locked, and the idempotency key stops a retried
     request from billing twice. Not enough money -> nothing is charged or reserved."""
     key = str(json_body().get("idempotency_key") or "").strip()

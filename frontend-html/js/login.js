@@ -23,7 +23,7 @@ function setMode(next) {
   document.querySelectorAll('.tab').forEach((t) => t.classList.toggle('active', t.dataset.mode === mode));
   document.getElementById('name-field').hidden = mode !== 'signup';
   submit.textContent = mode === 'signup' ? 'Create account' : 'Login';
-  document.getElementById('switch-text').textContent = mode === 'login' ? 'New to SmartCart?' : 'Already registered?';
+  document.getElementById('switch-text').textContent = mode === 'login' ? 'New to CartLess Checkout?' : 'Already registered?';
   document.getElementById('switch').textContent = mode === 'login' ? 'Create an account' : 'Login';
   document.getElementById('password').setAttribute('autocomplete', mode === 'signup' ? 'new-password' : 'current-password');
   clearErrors();

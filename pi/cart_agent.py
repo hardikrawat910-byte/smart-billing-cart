@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-SmartCart - Raspberry Pi program (cart scale + camera + exit gate).
+CartLess Checkout - Raspberry Pi program (cart scale + camera + exit gate).
 
 One Raspberry Pi with the Pi camera and an HX711 load cell does two jobs:
   cart  - when an item settles on the platform it sends ONE weight reading and ONE photo
-          to the SmartCart website, which checks barcode + weight + colour.
+          to the CartLess Checkout website, which checks barcode + weight + colour.
   exit  - the same camera watches for bill QR codes (SCBILL-...). When a customer holds
           their bill under it, the website checks the bill and the Pi answers with the
           green LED + one beep (may leave) or the red LED + beeps (stop).
@@ -41,7 +41,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 CONFIG_PATH = os.path.join(HERE, "cart_agent.ini")
 
 DEFAULT_INI = """\
-# SmartCart Raspberry Pi settings. Edit, save, then run:  python3 cart_agent.py run
+# CartLess Checkout Raspberry Pi settings. Edit, save, then run:  python3 cart_agent.py run
 
 [server]
 # Your public website (Render), or a laptop on the same WiFi: http://<laptop IP>:5000
@@ -655,7 +655,7 @@ class Server:
 
     def _request(self, path, data=None, content_type=None, timeout=20):
         headers = {"X-Device-Key": self.key, "X-Device-Id": self.device_id,
-                   "User-Agent": f"SmartCart-Pi/{AGENT_VERSION}"}
+                   "User-Agent": f"CartLess-Pi/{AGENT_VERSION}"}
         if content_type:
             headers["Content-Type"] = content_type
         req = urllib.request.Request(self.url + path, data=data, headers=headers,
@@ -869,7 +869,7 @@ class Agent:
                 self.server_scale = payload.get("scale", True)      # older servers don't say
                 print(f"Server OK (verification mode: {self.mode}).", flush=True)
                 return
-            print(f"Cannot reach the SmartCart server: {explain(status, payload)}.\n"
+            print(f"Cannot reach the CartLess Checkout server: {explain(status, payload)}.\n"
                   "  Check the url in cart_agent.ini and the Pi's internet. Retrying in 10 s (Ctrl+C to stop)...",
                   flush=True)
             self.lights.show("offline")
@@ -1094,7 +1094,7 @@ def cmd_run(cfg, args):
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="SmartCart Raspberry Pi program")
+    parser = argparse.ArgumentParser(description="CartLess Checkout Raspberry Pi program")
     parser.add_argument("command", choices=["run", "calibrate", "test-scale", "test-camera", "test-lights"])
     parser.add_argument("--simulate", action="store_true", help="no HX711/camera/LEDs: type weights instead")
     parser.add_argument("--type-weight", action="store_true",

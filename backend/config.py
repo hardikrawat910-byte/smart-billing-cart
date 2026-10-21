@@ -112,7 +112,7 @@ class Config:
     LOGIN_MAX_FAILURES = int(_env("LOGIN_MAX_FAILURES", "5"))
     LOGIN_LOCK_MINUTES = int(_env("LOGIN_LOCK_MINUTES", "15"))
 
-    # SmartCart Wallet: largest single top-up, and optional demo money for every new account
+    # CartLess Wallet: largest single top-up, and optional demo money for every new account
     WALLET_MAX_TOPUP = float(_env("WALLET_MAX_TOPUP", "10000"))
     WALLET_WELCOME_AMOUNT = float(_env("WALLET_WELCOME_AMOUNT", "0"))
 
@@ -120,7 +120,7 @@ class Config:
     UNSCANNED_ALERT_SEC = int(_env("UNSCANNED_ALERT_SEC", "15"))
     # UPI for wallet top-ups (optional): the shop's UPI ID and the name shown in UPI apps
     UPI_ID = _env("UPI_ID")
-    UPI_PAYEE_NAME = _env("UPI_PAYEE_NAME", "SmartCart")
+    UPI_PAYEE_NAME = _env("UPI_PAYEE_NAME", "CartLess Checkout")
     # Days and "today" on the dashboard use this time zone offset (India = +05:30)
     APP_UTC_OFFSET_MINUTES = int(_env("APP_UTC_OFFSET_MINUTES", "330"))
 

@@ -50,7 +50,7 @@ def bill_code(order):
 
 
 def parse_bill_code(raw):
-    """Returns (order_id, signature) or (None, None) if it isn't a SmartCart bill code."""
+    """Returns (order_id, signature) or (None, None) if it isn't a CartLess Checkout bill code."""
     match = BILL_RE.match(str(raw or "").strip().replace(" ", "").lower().replace("scbill", "SCBILL"))
     return (int(match.group(1)), match.group(2)) if match else (None, None)
 

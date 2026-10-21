@@ -1,5 +1,5 @@
 [Unit]
-Description=SmartCart Raspberry Pi program (load cell + camera + exit gate)
+Description=CartLess Checkout Raspberry Pi program (load cell + camera + exit gate)
 After=network-online.target time-sync.target
 Wants=network-online.target
 

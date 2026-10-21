@@ -1,4 +1,4 @@
-"""SmartCart Wallet: customers pay their bills from a wallet balance.
+"""CartLess Wallet: customers pay their bills from a wallet balance.
 
 Money gets into the wallet with a top-up TOKEN:
   1. the customer chooses an amount on the Wallet page -> a token T-000042 with a QR
@@ -138,7 +138,7 @@ def lookup(staff):
     """Scanned or typed top-up token -> who it belongs to and how much they must pay."""
     topup_id, signature = parse_topup_code(json_body().get("code"))
     if topup_id is None:
-        return error("That is not a SmartCart top-up token (looks like T-000042).", 422)
+        return error("That is not a CartLess Checkout top-up token (looks like T-000042).", 422)
     row = db.session.get(TopupRequest, topup_id)
     if row is None or (signature is not None and not topup_signature_ok(row, signature)):
         return error("Token not recognised - it may be fake or edited.", 404)

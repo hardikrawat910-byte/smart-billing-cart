@@ -1,6 +1,6 @@
-# How SmartCart got here
+# How CartLess Checkout got here
 
-SmartCart started as a Figma design in July 2026, became an AI-generated app prototype in August and ended up as a working self-checkout cart with its own server, a Raspberry Pi on the cart and a live website, in October 2026. This page records each stage, what changed, and why.
+CartLess Checkout started as a Figma design in July 2026, became an AI-generated app prototype in August and ended up as a working self-checkout cart with its own server, a Raspberry Pi on the cart and a live website, in October 2026. This page records each stage, what changed, and why.
 
 ## Timeline
 
@@ -58,7 +58,7 @@ It also made the design better: the weight and the photo now come from one board
 | Version | What it added |
 |---|---|
 | v2.5 | Pi camera as the **exit gate** (reads the bill QR), Google sign-in, in-memory product cache |
-| v2.6 | One scanner for printed **barcodes and QR codes**; **SmartCart Wallet** with top-up tokens paid by cash or UPI |
+| v2.6 | One scanner for printed **barcodes and QR codes**; **CartLess Wallet** with top-up tokens paid by cash or UPI |
 | v2.7 | **General store** of 48 items in 8 sections, admin dashboard, "item not scanned" alert, product photos, install as an app |
 | v2.8 | Shopping list with store map, offers with MRP, budget, Call staff (ideas taken from Amazon Dash Cart, Instacart Caper and DMart Scan & Go) |
 | v2.8.1–v2.8.5 | Pi reads wallet tokens, libraries served from our own site, works in the Pi's own browser, no default secrets in the code |
@@ -67,7 +67,7 @@ The six electronics parts from the Lovable prototype are still in the shop today
 
 ## Prototype vs final
 
-| | Figma design (Jul) | Lovable prototype (Aug) | SmartCart v2.8.5 (Oct) |
+| | Figma design (Jul) | Lovable prototype (Aug) | CartLess Checkout v2.8.5 (Oct) |
 |---|---|---|---|
 | Built by | Drawn by us | AI app builder, from our prompts | Our own code, written and tested with AI help |
 | Server | None (screens only) | Supabase (hosted) | Flask + MySQL on Render + Aiven |
@@ -76,7 +76,7 @@ The six electronics parts from the Lovable prototype are still in the shop today
 | Scanning | QR (Upload QR, Torch) | QR codes only | Printed barcodes (EAN/UPC/Code 128/39) and QR labels |
 | Is the item really in the cart? | Not designed | Not checked | Barcode + weight + camera colour must agree; unscanned items trigger an alert |
 | Hardware | None | None | Raspberry Pi 4, Pi Camera v2, load cell + HX711, LEDs, buzzer |
-| Paying | Checkout Now button | Order recorded, no payment | SmartCart Wallet, topped up by cash or UPI with one-time tokens |
+| Paying | Checkout Now button | Order recorded, no payment | CartLess Wallet, topped up by cash or UPI with one-time tokens |
 | Leaving the shop | Nothing | Nothing | Signed, one-time exit pass QR checked by the Pi camera |
 | Staff tools | None | Product upload | Wallet counter, exit gate, dashboard, sales CSV, help calls |
 
@@ -85,3 +85,7 @@ The six electronics parts from the Lovable prototype are still in the shop today
 - **A prototype is for testing the idea, not the build.** Figma fixed the look and Lovable showed us the flow in days; owning the code is what let us add hardware, a wallet and fraud checks.
 - **The hard part of a smart cart is trust, not the shop.** Most of the work after August went into checking that the cart matches the bill.
 - **Hardware changes are cheaper when the server doesn't care.** Because the boards only talk to a fixed set of endpoints, swapping three ESP32s for one Pi took a day.
+
+## Renamed (October 2026)
+
+Renamed to CartLess Checkout: Self-Billing Using Your Own Phone, because "Smart Billing Cart" did not describe the idea: the shopper bills themselves on their own phone, so there is no billing queue. Earlier entries above keep the names used at the time.

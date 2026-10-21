@@ -1,6 +1,6 @@
 {
-  "name": "SmartCart",
-  "short_name": "SmartCart",
+  "name": "CartLess Checkout",
+  "short_name": "CartLess",
   "description": "Scan items as you shop, pay from your wallet and walk out. No billing queue.",
   "id": "/",
   "start_url": "index.html?source=app",

@@ -1,4 +1,4 @@
-"""SmartCart server-side measurements (used in docs/project/SmartCart_IEEE_Paper).
+"""CartLess Checkout server-side measurements (used in docs/project/CartLess_Checkout_IEEE_Paper).
 Run from backend/ against a local MySQL with seed data:  ADMIN_PASSWORD=... python ../tests/benchmark/bench.py
 In-process Flask test client; rate limiting is switched off for the run."""
 import os, sys, uuid, time, random, statistics, json

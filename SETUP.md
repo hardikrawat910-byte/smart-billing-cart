@@ -1,9 +1,9 @@
-# SmartCart - full setup and technical guide  (v2.9.0)
+# CartLess Checkout - full setup and technical guide  (v2.9.0)
 
 Back to the [project overview](README.md).
 
 A self-checkout cart for a neighbourhood general store: shoppers scan items with their phone, pay from
-a SmartCart Wallet and walk out. Flask + MySQL backend, HTML/CSS/JS website (installable as an app), and
+a CartLess Wallet and walk out. Flask + MySQL backend, HTML/CSS/JS website (installable as an app), and
 a Raspberry Pi (Pi camera + LEDs/buzzer) that checks the bill QR at the exit and reads wallet top-up tokens.
 
 **Cart scale: switched off (v2.9.0).** The weight + camera-colour check of every item (load cell + HX711)
@@ -12,7 +12,7 @@ items are added by barcode/QR alone and the website hides everything about the s
 scale, set `SCALE_ENABLED=1` and everything below about weights comes back - nothing else changes.
 
 ```
- phone (website)  --scan barcode-->  SmartCart website (Flask + MySQL, Render)  <--HTTPS out--  Raspberry Pi
+ phone (website)  --scan barcode-->  CartLess Checkout website (Flask + MySQL, Render)  <--HTTPS out--  Raspberry Pi
                   <--cart, bill QR--                                                            load cell, camera,
                                                                                                 LEDs + buzzer
 ```
@@ -29,7 +29,7 @@ July 2026: Figma design -> August: AI-generated Lovable prototype -> September: 
    (and `ADMIN_PASSWORD` to your own admin password).
 3. In a terminal:
    ```
-   cd smart-billing-cart/backend
+   cd cartless-checkout/backend
    python -m venv venv
    venv\Scripts\activate
    pip install -r requirements.txt
@@ -57,21 +57,21 @@ it in MySQL, so photos survive Render restarts. **Remove** goes back to the colo
 
 ## Scanning: one scanner for barcodes and QR codes
 The Scan page reads the **barcode printed on a pack** (EAN-13/8, UPC-A/E, Code 128/39) and
-**SmartCart QR labels** with the same camera - no mode to choose. Every product has ONE code:
+**CartLess QR labels** with the same camera - no mode to choose. Every product has ONE code:
 - a packaged item: its barcode number (e.g. `8904004400083`); the 12-digit UPC and 13-digit EAN
   forms of the same barcode both match, and a mistyped number is refused (check digit);
 - an item with no barcode: any text, then print its QR label (Admin > Products > QR).
 Adding a real item: as admin, scan its barcode on the Scan page -> **New item -> Add this product**
 (the form opens with the barcode filled in), or press **Scan** next to "Product code" in the form.
 
-## SmartCart Wallet and payment tokens
+## CartLess Wallet and payment tokens
 Bills are paid from the customer's wallet (1 token = Rs 1):
 1. Customer: **Wallet** tab -> choose an amount -> **Get token**. A top-up token `T-000042` with a QR appears.
 2. They pay that amount at the counter by **cash or UPI**.
 3. Staff: **Admin > Counter** (`counter.html`) -> scan the token (or type its number) -> **Cash received**
    or **UPI received**. The wallet is credited at once and the customer's page updates by itself.
 4. Cart -> **Pay Rs X** takes the bill from the wallet (refused if the balance is short; the cart offers
-   "Add Rs Y" instead). The bill shows "Paid from SmartCart Wallet - W-000123" and the exit gate checks it.
+   "Add Rs Y" instead). The bill shows "Paid from CartLess Wallet - W-000123" and the exit gate checks it.
 **UPI:** set `UPI_ID` (e.g. `yourshop@okaxis`, plus optional `UPI_PAYEE_NAME`) and every token gets a
 **Pay Rs X with a UPI app** button (opens GPay/PhonePe/Paytm with the amount filled in), and the counter
 shows a UPI QR with the amount for the customer to scan. Staff still press **UPI received** only after the
@@ -150,7 +150,7 @@ stock and settings (shopping lists, budgets and staff calls are cleared too). Ty
 items from the first version. It cannot be undone - press it once, just before a demo or hand-over.
 
 ## Install as an app
-On Android Chrome the site offers **Install** (also in Profile > "Install the SmartCart app"); on an
+On Android Chrome the site offers **Install** (also in Profile > "Install the CartLess Checkout app"); on an
 iPhone use Safari > Share > **Add to Home Screen**. It then opens full screen with its own icon.
 Prices, stock and money always come live from the server; with no connection the app shows a
 friendly "You are offline" page (`sw.js`, `manifest.webmanifest`, `offline.html`, `icons/`).
@@ -208,8 +208,8 @@ in the Pi's own browser these pages leave the camera to the Pi program while it 
   platform) the bag weight doesn't fit the items on the bill.
 
 ## Google sign-in (optional)
-1. Open console.cloud.google.com/auth/clients and create a project (e.g. SmartCart).
-2. **Branding**: app name SmartCart, your email as support + developer contact. Leave the logo
+1. Open console.cloud.google.com/auth/clients and create a project (e.g. CartLess Checkout).
+2. **Branding**: app name CartLess Checkout, your email as support + developer contact. Leave the logo
    empty (a logo makes Google ask for verification). **Audience**: External.
 3. **Clients > Create client > Web application**. Authorised JavaScript origins:
    `https://<your-site>.onrender.com`, `http://localhost` and `http://localhost:5000`. No redirect URI.
@@ -239,7 +239,7 @@ network is slow or filters them, the page still draws, lists and polls, and the 
 If one of the page's own scripts fails, a red line at the top names the file and line.
 
 On the Raspberry Pi itself (Chromium or Firefox), the Wallet counter and Exit gate pages leave the
-camera to the SmartCart Pi program while it is running, and what it reads appears on those pages by
+camera to the CartLess Checkout Pi program while it is running, and what it reads appears on those pages by
 itself. When the Pi program is not running, they use the camera in the browser.
 
 The Wallet counter shows a "Pi camera" line: online and passing tokens, not running, camera reader

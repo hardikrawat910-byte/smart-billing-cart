@@ -1,4 +1,4 @@
-"""POST /api/scan - the heart of the Smart Billing Cart."""
+"""POST /api/scan - the heart of CartLess Checkout."""
 from flask import Blueprint, jsonify
 
 from alerts import refresh_alerts

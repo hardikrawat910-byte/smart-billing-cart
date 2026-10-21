@@ -92,7 +92,7 @@ function render(user, stats, orders) {
     <div class="install-slot" id="install-slot" style="margin-top:16px"></div>
     <h2 class="section-title">Order history</h2>
     ${orderList}
-    <a class="btn btn-ghost btn-block" style="margin-top:16px" href="team.html">${icon('user', 16)} About SmartCart &amp; the team</a>
+    <a class="btn btn-ghost btn-block" style="margin-top:16px" href="team.html">${icon('user', 16)} About CartLess Checkout &amp; the team</a>
     <button type="button" class="btn btn-outline btn-block" style="margin-top:8px" id="logout">${icon('logout', 16)} Sign out</button>
     <p class="legal-links"><a href="team.html">About &amp; team</a> &middot; <a href="terms.html">Terms of use</a> &middot; <a href="privacy.html">Privacy policy</a></p>`;
 

@@ -1,7 +1,7 @@
 #!/bin/bash
-# SmartCart Pi setup.
+# CartLess Checkout Pi setup.
 #   bash install.sh             install the camera, GPIO and QR-code libraries
-#   bash install.sh autostart   start the SmartCart program by itself whenever the Pi powers on
+#   bash install.sh autostart   start the CartLess Checkout program by itself whenever the Pi powers on
 #   bash install.sh firewall    block every incoming connection from the internet (SSH only from your own WiFi)
 #   bash install.sh status      is it running? last 30 log lines
 set -e

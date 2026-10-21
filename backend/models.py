@@ -27,7 +27,7 @@ class User(db.Model):
     google_sub = db.Column(db.String(64), unique=True)               # Google account id, if linked
     organization = db.Column(db.String(120))
     role = db.Column(db.Enum("user", "admin", name="user_role"), nullable=False, default="user")
-    wallet_balance = db.Column(db.Numeric(10, 2), nullable=False, default=0)   # SmartCart Wallet (INR)
+    wallet_balance = db.Column(db.Numeric(10, 2), nullable=False, default=0)   # CartLess Wallet (INR)
     shopping_budget = db.Column(db.Numeric(10, 2))     # optional spending limit for a shopping trip
     created_at = db.Column(db.DateTime, nullable=False, default=utcnow)
     updated_at = db.Column(db.DateTime, nullable=False, default=utcnow, onupdate=utcnow)

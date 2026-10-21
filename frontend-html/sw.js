@@ -1,4 +1,4 @@
-// SmartCart service worker: lets the phone install SmartCart as an app.
+// CartLess Checkout service worker: lets the phone install CartLess Checkout as an app.
 // - Pages and /api/ data always come from the server (prices, stock and money must be live).
 // - Versioned files (style.css?v=2.9.0, ui.js?v=2.9.0 ...) are kept, so the app opens fast.
 // - With no connection, pages show offline.html instead of the browser's error.

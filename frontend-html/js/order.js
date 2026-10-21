@@ -13,8 +13,8 @@ async function load() {
     const { order: o } = await api(`/api/orders/${encodeURIComponent(id)}`);
     document.getElementById('subtitle').textContent = fmtDate(o.created_at, true);
     main.innerHTML = `
-      <div class="print-only" style="text-align:center;margin-bottom:12px"><p style="font-weight:800;font-size:1.2rem">SmartCart</p>
-        <p class="xs">Smart Billing Cart &middot; Bill ${esc(o.number)} &middot; ${esc(fmtDate(o.created_at, true))}</p></div>
+      <div class="print-only" style="text-align:center;margin-bottom:12px"><p style="font-weight:800;font-size:1.2rem">CartLess Checkout</p>
+        <p class="xs">Self-Billing Using Your Own Phone &middot; Bill ${esc(o.number)} &middot; ${esc(fmtDate(o.created_at, true))}</p></div>
       <div class="card confirm-card">${icon('check', 32)}
         <p style="font-size:1.125rem;font-weight:700">${param('paid') ? 'Payment successful' : 'Thanks for your order'}</p>
         <p class="small">${o.exited ? `Checked out at the exit gate on ${esc(fmtDate(o.exit_verified_at, true))}.` : 'Show the bill QR below at the exit gate.'}</p>
@@ -32,7 +32,7 @@ async function load() {
           <span style="font-size:1.125rem;font-weight:700;color:var(--primary)">${money(o.total_amount)}</span></div>
         ${o.savings > 0 ? `<div class="row between small saving-row" style="margin-top:6px"><span>${icon('tag', 14)} You saved on offers</span><span>${money(o.savings)}</span></div>` : ''}
         <p class="xs muted" style="margin-top:6px">Prices include GST.</p>
-        ${o.payment && o.payment.method === 'wallet' ? `<p class="xs muted row" style="gap:6px;margin-top:8px">${icon('wallet', 14)} Paid from SmartCart Wallet &middot; <span class="mono">${esc(o.payment.ref)}</span></p>` : ''}
+        ${o.payment && o.payment.method === 'wallet' ? `<p class="xs muted row" style="gap:6px;margin-top:8px">${icon('wallet', 14)} Paid from CartLess Wallet &middot; <span class="mono">${esc(o.payment.ref)}</span></p>` : ''}
       </div>
       <div class="card" style="margin-top:16px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center">
         <p class="small" style="font-weight:600">Exit pass</p>
@@ -58,13 +58,13 @@ async function load() {
     // "Save as PDF" in the browser print dialog gives the PDF receipt
     document.getElementById('print').onclick = () => window.print();
     // Share the receipt as text (WhatsApp, email...) where the phone supports it
-    const text = [`SmartCart bill ${o.number} - ${fmtDate(o.created_at, true)}`,
+    const text = [`CartLess Checkout bill ${o.number} - ${fmtDate(o.created_at, true)}`,
       ...o.items.map((i) => `${i.quantity} x ${i.name}  ${money(i.line_total)}`),
       `Total ${money(o.total_amount)}${o.savings > 0 ? ` (saved ${money(o.savings)})` : ''}`].join('\n');
     const share = document.getElementById('share');
     if (navigator.share) {
       share.hidden = false;
-      share.onclick = () => navigator.share({ title: `SmartCart bill ${o.number}`, text }).catch(() => {});
+      share.onclick = () => navigator.share({ title: `CartLess Checkout bill ${o.number}`, text }).catch(() => {});
     }
     document.getElementById('again').onclick = async (e) => {
       const btn = e.currentTarget;

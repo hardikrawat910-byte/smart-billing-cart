@@ -64,7 +64,7 @@ function sortSections(list) {
 // text as a QR can be scanned by any UPI app. (The shop still confirms the money at the counter.)
 function upiLink(upi, amount, note) {
   const pa = String(upi.id).replace(/[^\w.\-@]/g, '');
-  return `upi://pay?pa=${pa}&pn=${encodeURIComponent(upi.name || 'SmartCart')}&am=${Number(amount).toFixed(2)}&cu=INR&tn=${encodeURIComponent(note || 'SmartCart top-up')}`;
+  return `upi://pay?pa=${pa}&pn=${encodeURIComponent(upi.name || 'CartLess Checkout')}&am=${Number(amount).toFixed(2)}&cu=INR&tn=${encodeURIComponent(note || 'CartLess Checkout top-up')}`;
 }
 
 function icon(name, size = 20) {
@@ -182,13 +182,13 @@ async function drawQr(el, text, size, fallback) {
   return true;
 }
 
-// A Raspberry Pi (or a similar ARM Linux board). Its camera belongs to the SmartCart Pi program and
+// A Raspberry Pi (or a similar ARM Linux board). Its camera belongs to the CartLess Checkout Pi program and
 // its CPU is slow, so staff pages there don't open the camera by themselves, and scanning uses a
 // smaller picture. (Chromium hides the CPU type in its user agent; navigator.platform still has it.)
 const ON_PI = /Linux (aarch64|arm)/i.test(`${navigator.platform || ''} ${navigator.userAgent}`)
   && !/Android/i.test(navigator.userAgent);
 
-// One camera scanner for everything on a pack: SmartCart QR labels AND printed barcodes
+// One camera scanner for everything on a pack: CartLess QR labels AND printed barcodes
 // (EAN-13/8, UPC-A/E, Code 128/39). Phones with a built-in barcode detector use it.
 async function startCodeScanner(elementId, onDecode, onNoCode, { qrOnly = false } = {}) {
   if (!(await loadLib('scanner'))) {
@@ -229,12 +229,12 @@ async function startCodeScanner(elementId, onDecode, onNoCode, { qrOnly = false 
 }
 
 // Why the camera did not start, in plain words. On the Raspberry Pi the camera can only be used by
-// ONE program: while the SmartCart Pi program runs, the browser cannot open it (and need not).
+// ONE program: while the CartLess Checkout Pi program runs, the browser cannot open it (and need not).
 function cameraHelp(err, fallback) {
   const text = String((err && (err.name || err.message)) || err || '');
   if (/LibraryMissing/.test(text)) return `The scanner did not load on this network - ${fallback}.`;
   if (/NotReadable|in use|Could not start|TrackStart|busy/i.test(text)) {
-    return `The camera is busy in another program. On the Pi, the SmartCart Pi program is using it - `
+    return `The camera is busy in another program. On the Pi, the CartLess Checkout Pi program is using it - `
       + `codes it reads appear on this page by themselves. Or ${fallback}.`;
   }
   if (/NotFound|no camera|Requested device not found|Overconstrained/i.test(text)) return `No camera found - ${fallback}.`;
@@ -274,7 +274,7 @@ async function refreshCartBadge(count) {
   lastCartCount = count;
 }
 
-/* ---- install SmartCart as an app (PWA): home-screen icon, opens full screen ---- */
+/* ---- install CartLess Checkout as an app (PWA): home-screen icon, opens full screen ---- */
 let installPrompt = null;
 if ('serviceWorker' in navigator && window.isSecureContext && API_BASE === '') {
   window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
@@ -286,7 +286,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
 window.addEventListener('appinstalled', () => {
   installPrompt = null;
   document.querySelectorAll('.install-slot').forEach((el) => { el.innerHTML = ''; });
-  toast('SmartCart is on your home screen');
+  toast('CartLess Checkout is on your home screen');
 });
 function isInstalledApp() {
   return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
@@ -298,7 +298,7 @@ function installCard(slot) {
     if (!installPrompt && !ios) { slot.innerHTML = ''; return; }
     slot.innerHTML = `<div class="card install-card">
       <img src="icons/icon-192.png" width="44" height="44" alt="">
-      <div class="grow"><p class="small" style="font-weight:600">Install the SmartCart app</p>
+      <div class="grow"><p class="small" style="font-weight:600">Install the CartLess Checkout app</p>
         <p class="xs muted">${installPrompt ? 'Opens full screen from your home screen, like a normal app.'
           : 'In Safari, tap the Share button, then <b>Add to Home Screen</b>.'}</p></div>
       ${installPrompt ? '<button type="button" class="btn btn-sm" data-install>Install</button>' : ''}</div>`;
