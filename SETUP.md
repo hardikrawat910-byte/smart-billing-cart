@@ -29,7 +29,7 @@ July 2026: Figma design -> August: AI-generated Lovable prototype -> September: 
    (and `ADMIN_PASSWORD` to your own admin password).
 3. In a terminal:
    ```
-   cd cartless-checkout/backend
+   cd smart-billing-cart/backend
    python -m venv venv
    venv\Scripts\activate
    pip install -r requirements.txt

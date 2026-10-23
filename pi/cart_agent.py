@@ -357,6 +357,7 @@ class HX711:
 
     def __init__(self, pins, dt, sck):
         self.pins, self.dt, self.sck = pins, dt, sck
+        self.no_data = self.saturated = 0      # why reads failed, for a clear error message
         pins.setup(dt, sck)
         pins.write(sck, 0)
 
@@ -367,6 +368,7 @@ class HX711:
         deadline = time.monotonic() + timeout
         while not self.ready():
             if time.monotonic() > deadline:
+                self.no_data += 1
                 return None
             time.sleep(0.001)
         write, read, sck, dt = self.pins.write, self.pins.read, self.sck, self.dt
@@ -380,6 +382,7 @@ class HX711:
         if value & 0x800000:
             value -= 1 << 24
         if value in (0x7FFFFF, -0x800000, -1):
+            self.saturated += 1
             return None        # saturated or a glitched read (Linux interrupted the clock)
         return value
 
@@ -397,10 +400,26 @@ class Scale:
         self.offset = 0.0
 
     def average_raw(self, count=15):
-        values = [v for v in (self.hx.read_median() for _ in range(count)) if v is not None]
+        self.hx.no_data = self.hx.saturated = 0
+        values = []
+        for _ in range(count):
+            v = self.hx.read_median()
+            if v is not None:
+                values.append(v)
+            elif not values and self.hx.no_data >= 9:
+                break                  # nothing at all after ~5 s: no point waiting longer
         if len(values) < max(3, count // 3):
-            raise RuntimeError("The HX711 is not answering. Check VCC, GND, DT and SCK wiring.")
+            raise RuntimeError(self.hx_problem())
         return statistics.median(values)
+
+    def hx_problem(self):
+        hx = self.hx
+        if hx.saturated > hx.no_data:
+            return ("The HX711 answers, but every reading is at its limit: a load-cell wire is loose. "
+                    "Check red E+, black E-, white A-, green A+ on the HX711.")
+        return (f"The HX711 is not answering on DT = GPIO {hx.dt}, SCK = GPIO {hx.sck} (GPIO numbers, not pin "
+                "numbers). Check that dt_pin / sck_pin in cart_agent.ini match the wires, that VCC (and VDD, "
+                "if the board has it) is on 3.3 V, and GND is connected. See pi/README.md > Troubleshooting.")
 
     def tare(self):
         self.offset = self.average_raw()
@@ -815,6 +834,7 @@ def cmd_calibrate(cfg, args):
     hx = HX711(pins, cfg.getint("scale", "dt_pin", fallback=5), cfg.getint("scale", "sck_pin", fallback=6))
     scale = Scale(hx, 0)
     input("1) Take everything off the platform, then press Enter... ")
+    print("   Reading the HX711 (a few seconds)...", flush=True)
     zero = scale.average_raw(20)
     print(f"   empty reading: {zero:.0f}")
     while True:
@@ -826,6 +846,7 @@ def cmd_calibrate(cfg, args):
         except ValueError:
             pass
         print("   Type the weight as a number of grams.")
+    print("   Reading the HX711 (a few seconds)...", flush=True)
     loaded = scale.average_raw(20)
     factor = (loaded - zero) / known
     if abs(factor) < 1:
@@ -1106,7 +1127,10 @@ def main(argv=None):
     cfg = load_config()
     commands = {"run": cmd_run, "calibrate": cmd_calibrate, "test-scale": cmd_test_scale,
                 "test-camera": cmd_test_camera, "test-lights": cmd_test_lights}
-    commands[args.command](cfg, args)
+    try:
+        commands[args.command](cfg, args)
+    except RuntimeError as err:          # hardware problems: a plain message instead of a traceback
+        raise SystemExit(f"Error: {err}")
 
 
 if __name__ == "__main__":

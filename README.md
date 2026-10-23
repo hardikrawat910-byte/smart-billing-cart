@@ -115,7 +115,7 @@ Without the hardware, the website still runs. With `SCALE_ENABLED=1`, an admin-o
 Quick start on a PC with Python 3.10+ and MySQL 8:
 
 ```
-cd cartless-checkout/backend
+cd smart-billing-cart/backend
 copy .env.example .env        (Mac/Linux: cp .env.example .env), then set DB_PASSWORD (and ADMIN_PASSWORD)
 python -m venv venv
 venv\Scripts\activate         (Mac/Linux: source venv/bin/activate)
@@ -158,6 +158,8 @@ Project documents are in [`docs/project/`](docs/project/):
 | `CartLess_Checkout_Presentation.pptx` | Presentation following the report's chapters |
 | `CartLess_Checkout_MiniProject_PPT_SIES_format.pptx` | Presentation in the SIES mini project template |
 | `CartLess_Checkout_MiniProject_Logbook.docx` | Mini project logbook (front pages filled) |
+
+Printable product labels for the 48 demo products are in [`docs/labels/`](docs/labels/): one PDF of QR codes and one of barcodes (Code 128, or the pack's own EAN-13). Both hold the same product code, so either one scans. Print at 100%; rebuild them with `python tools/make_labels.py` after changing the catalogue.
 
 The server tests behind the paper's numbers are in [`tests/benchmark/`](tests/benchmark/).
 

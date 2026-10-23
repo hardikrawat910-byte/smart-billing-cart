@@ -62,3 +62,20 @@ Exit gate only: set `[scale] enabled = no`.  No hardware at all: `python3 cart_a
   `POST /api/hardware/weight` (`device_id: rpi-cart`); 0 g when the platform is cleared
 * bill QR seen by the camera: `POST /api/exit/device` with the code and the platform weight
 * every 30 s: `POST /api/hardware/heartbeat` (the website shows the Pi as online)
+
+## Troubleshooting the scale (HX711)
+`calibrate` and `test-scale` say which of the two faults it is:
+
+- **"The HX711 is not answering on DT = GPIO x, SCK = GPIO y"** - the Pi gets no data at all.
+  1. `dt_pin` / `sck_pin` in `cart_agent.ini` are **GPIO numbers**, not pin numbers (GPIO 5 = pin 29,
+     GPIO 6 = pin 31). Check both with `grep -E "dt_pin|sck_pin" cart_agent.ini` and make them match the wires.
+  2. Check the jumper wires: put one wire from pin 29 to pin 30 (GND) and run `pinctrl get 5`.
+     It must show `lo`; if it shows `hi`, the wire is broken or on the wrong pins. Run `pinout` for a map
+     (pin 1 is the corner pin nearest the microSD card).
+  3. HX711 VCC on 3.3 V (pin 1 or 17), never 5 V. If the board has both **VCC and VDD**, both go to 3.3 V.
+     A multimeter between the HX711's VCC and GND should read about 3.3 V.
+  4. The HX711's header pins must be soldered. If all of the above is right, try a spare HX711.
+- **"The HX711 answers, but every reading is at its limit"** - a load-cell wire is loose on E+/E-/A+/A-.
+- **The weight goes down when you add weight** - swap the green and white wires, then run `calibrate` again.
+- The program is the only thing that may use these pins: stop `cart_agent.py run` (Ctrl+C, or
+  `sudo systemctl stop smartcart-agent` if you set up autostart) before `calibrate` or `test-scale`.
